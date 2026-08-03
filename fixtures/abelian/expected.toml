@@ -1,0 +1,10 @@
+# n-dimensional abelian algebra (default n = 2 in tests).
+
+name = "abelian"
+dim = 2
+center_dim = 2
+derived_length = 1
+nilpotency_class = 1
+is_solvable = true
+is_nilpotent = true
+killing_rank = 0

@@ -1,0 +1,12 @@
+# Expected invariants for the 3D Heisenberg algebra over ℚ.
+# Fill structure constants when implementing constructors.
+
+name = "heisenberg3"
+dim = 3
+center_dim = 1
+derived_length = 2
+nilpotency_class = 2
+is_solvable = true
+is_nilpotent = true
+killing_rank = 0
+# derivation_dim = …  # add when ready
