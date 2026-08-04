@@ -58,7 +58,7 @@ julia --project=.
 using ParametricLie
 import Nemo   # use `import` to avoid clashing exports (dim, …)
 
-L = LieAlgebra(Nemo.QQ, 3)
+L = LieAlgebra(Nemo.QQ, 3)  # abelian; or LieAlgebra(F, c) with n×n×n struct_consts
 ```
 
 ## Test

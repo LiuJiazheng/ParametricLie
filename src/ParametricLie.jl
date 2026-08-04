@@ -20,8 +20,9 @@ include("bracket.jl")
 include("invariants.jl")
 include("analyze.jl")
 
-export LieAlgebra, dim, coefficient_ring, base_ring
-export lie_bracket, bracket, check_jacobi
+export LieAlgebra, LieAlgebraElem, dim, coefficient_ring, base_ring, structure_constants
+export coords, basis_elem
+export lie_bracket, lie_bracket!, bracket, ad, check_jacobi, check_antisymmetry, JacobiCertificate
 export center, derived_series, lower_central_series
 export is_solvable, is_nilpotent, killing_form, derivations, change_of_basis
 export analyze

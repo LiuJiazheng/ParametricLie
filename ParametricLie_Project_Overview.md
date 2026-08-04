@@ -132,6 +132,8 @@ arbitrary \(c_{ij}^k\) over \(\mathbb{Q}\) / \(\mathbb{F}_p\); adapters come lat
 > field (esp. \(\mathbb{Q}\)), with reproducible certificates and a clear API
 > we own. Parametric / cohomological differentiation starts *after* this core.
 
+**UX contract (input / skeleton / output):** [docs/V0.1.md](docs/V0.1.md)
+
 ------------------------------------------------------------------------
 
 ## v0.2 --- Parameterized Lie Algebras

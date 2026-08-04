@@ -7,16 +7,11 @@ import Nemo
 @testset "ParametricLie.jl" begin
     # Layer 1 — unit tests for small components
     include("unit/types.jl")
+    include("unit/bracket.jl")
 
     # Layer 2 — mathematical identities (Jacobi, …)
     # include("identities/jacobi.jl")
 
     # Layer 3 — known examples / fixtures
     include("examples/smoke.jl")
-
-    # Layer 4 — differential testing vs Sage/GAP/Oscar (later)
-    # include("differential/.gitkeep")
-
-    # Layer 5 — property-based tests (basis change, …)
-    # include("property/basis_change.jl")
 end

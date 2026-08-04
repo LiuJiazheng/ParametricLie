@@ -153,7 +153,7 @@ so results can feed adapters, codegen, and (eventually) Lean.
 ## North-star workflow
 
 ```julia
-L = LieAlgebra(R, struct_consts)   # R = QQ or QQ(a)
+L = LieAlgebra(F, struct_consts)   # F = QQ or QQ(a); n×n×n tensor
 
 check_jacobi(L)
 analyze(L)
