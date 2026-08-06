@@ -8,6 +8,8 @@ import Nemo
     # Layer 1 — unit tests for small components
     include("unit/types.jl")
     include("unit/bracket.jl")
+    include("unit/change_of_basis.jl")
+    include("unit/center.jl")
 
     # Layer 2 — mathematical identities (Jacobi, …)
     # include("identities/jacobi.jl")

@@ -25,6 +25,7 @@ export coords, basis_elem
 export lie_bracket, lie_bracket!, bracket, ad, check_jacobi, check_antisymmetry, JacobiCertificate
 export center, derived_series, lower_central_series
 export is_solvable, is_nilpotent, killing_form, derivations, change_of_basis
+export LieSubspace, basis_matrix, basis_elems
 export analyze
 
 end # module ParametricLie
