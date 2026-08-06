@@ -23,9 +23,10 @@ include("analyze.jl")
 export LieAlgebra, LieAlgebraElem, dim, coefficient_ring, base_ring, structure_constants
 export coords, basis_elem
 export lie_bracket, lie_bracket!, bracket, ad, check_jacobi, check_antisymmetry, JacobiCertificate
-export center, derived_series, lower_central_series
+export center, derived_series, lower_central_series, derived_algebra
 export is_solvable, is_nilpotent, killing_form, derivations, change_of_basis
-export LieSubspace, basis_matrix, basis_elems
+export LieSubspace, basis_matrix, basis_elems, full_space, zero_space
+export commutator_span, LieSeries, SeriesKind, terms, layers
 export analyze
 
 end # module ParametricLie

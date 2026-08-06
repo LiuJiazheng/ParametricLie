@@ -10,6 +10,7 @@ import Nemo
     include("unit/bracket.jl")
     include("unit/change_of_basis.jl")
     include("unit/center.jl")
+    include("unit/series.jl")
 
     # Layer 2 — mathematical identities (Jacobi, …)
     # include("identities/jacobi.jl")
