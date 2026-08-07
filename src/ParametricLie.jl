@@ -8,7 +8,7 @@ constants (parametric families, stratification, cohomology — see
 Layout:
 
 - `src/lie/` — single-algebra core (structure, invariants, `analyze`)
-- `src/parametric/` — families, assumptions, and conditional linear algebra
+- `src/parametric/` — families, assumptions, conditional LA, and CondTree analysis
 """
 module ParametricLie
 
@@ -33,6 +33,7 @@ include("lie/analyze.jl")
 include("parametric/specialize.jl")
 include("parametric/assumptions.jl")
 include("parametric/conditional_linalg.jl")
+include("parametric/cond_tree.jl")
 
 export LieAlgebra, LieAlgebraElem, dim, coefficient_ring, base_ring, structure_constants
 export parameters, domain_denominators
@@ -56,8 +57,14 @@ export specialize, generic_algebra, analyze_generic
 export PivotStatus, PIVOT_ZERO, PIVOT_NONZERO, PIVOT_UNKNOWN
 export AssumptionSet, status, normalize_poly, assume_zero, assume_nonzero
 export empty_assumptions, assumptions_from_domain
-export PivotCertificate, BranchBudget, CondLeaf, CondResult
+export PivotCertificate, BranchBudget, CondLeaf, CondResult, CondTree
 export conditional_rank, conditional_nullspace, conditional_rref, conditional_solve
-export leaves
+export conditional_center, conditional_killing, conditional_invariants
+export cond_tree, refine, refine_leaves, leaves, algebra
+export center_dim, center_basis, killing_rank_of, killing_radical_dim
+export derived_dim_of, derived_profile_of, radical_dim_of, der_dim_of
+export is_solvable_of, is_nilpotent_of
+export analyze_conditional, default_conditional_suite, is_complete
+export unresolved_invariants, invariant_signature
 
 end # module ParametricLie
