@@ -8,7 +8,7 @@ constants (parametric families, stratification, cohomology — see
 Layout:
 
 - `src/lie/` — single-algebra core (structure, invariants, `analyze`)
-- `src/parametric/` — families, assumptions, conditional LA, and CondTree analysis
+- `src/parametric/` — parameterized families, conditional LA, stratification
 """
 module ParametricLie
 
@@ -17,6 +17,8 @@ using SparseArrays
 using AbstractAlgebra
 using Nemo
 
+# Include order = dependency order.
+# --- lie (single algebra) ----------------------------------------------------
 include("lie/types.jl")
 include("lie/bracket.jl")
 include("lie/change_of_basis.jl")
@@ -30,10 +32,14 @@ include("lie/levi.jl")
 include("lie/ideal_decomp.jl")
 include("lie/derivations.jl")
 include("lie/analyze.jl")
+
+# --- parametric (families & stratification) ----------------------------------
 include("parametric/specialize.jl")
 include("parametric/assumptions.jl")
 include("parametric/conditional_linalg.jl")
 include("parametric/cond_tree.jl")
+include("parametric/stratify.jl")
+include("parametric/strata_compare.jl")
 
 export LieAlgebra, LieAlgebraElem, dim, coefficient_ring, base_ring, structure_constants
 export parameters, domain_denominators
@@ -66,5 +72,8 @@ export derived_dim_of, derived_profile_of, radical_dim_of, der_dim_of
 export is_solvable_of, is_nilpotent_of
 export analyze_conditional, default_conditional_suite, is_complete
 export unresolved_invariants, invariant_signature
+export Stratum, JumpEntry, JumpReport, Stratification
+export stratify, jump_table
+export StratumComparison, compare, validate_stratum, validate_stratification
 
 end # module ParametricLie
