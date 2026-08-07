@@ -28,6 +28,7 @@ include("levi.jl")
 include("ideal_decomp.jl")
 include("derivations.jl")
 include("analyze.jl")
+include("specialize.jl")
 
 export LieAlgebra, LieAlgebraElem, dim, coefficient_ring, base_ring, structure_constants
 export parameters, domain_denominators
@@ -47,5 +48,6 @@ export QuotientAlgebra, quotient_algebra
 export LeviDecomposition, levi_decomposition, levi_subalgebra
 export adjoint_commutant, ideal_decomposition, is_simple
 export analyze, LieAlgebraReport, jacobi, levi_kind, simple_factor_dims
+export specialize, generic_algebra, analyze_generic
 
 end # module ParametricLie

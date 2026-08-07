@@ -17,6 +17,7 @@ import Nemo
     include("unit/derivations.jl")
     include("unit/analyze.jl")
     include("unit/parametric.jl")
+    include("unit/specialize.jl")
 
     # Layer 2 — mathematical identities (Jacobi, …)
     # include("identities/jacobi.jl")
