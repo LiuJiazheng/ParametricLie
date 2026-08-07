@@ -8,7 +8,7 @@ constants (parametric families, stratification, cohomology — see
 Layout:
 
 - `src/lie/` — single-algebra core (structure, invariants, `analyze`)
-- `src/parametric/` — parameterized families (`specialize` / generic analyze)
+- `src/parametric/` — families, assumptions, and conditional linear algebra
 """
 module ParametricLie
 
@@ -31,6 +31,8 @@ include("lie/ideal_decomp.jl")
 include("lie/derivations.jl")
 include("lie/analyze.jl")
 include("parametric/specialize.jl")
+include("parametric/assumptions.jl")
+include("parametric/conditional_linalg.jl")
 
 export LieAlgebra, LieAlgebraElem, dim, coefficient_ring, base_ring, structure_constants
 export parameters, domain_denominators
@@ -51,5 +53,11 @@ export LeviDecomposition, levi_decomposition, levi_subalgebra
 export adjoint_commutant, ideal_decomposition, is_simple
 export analyze, LieAlgebraReport, jacobi, levi_kind, simple_factor_dims
 export specialize, generic_algebra, analyze_generic
+export PivotStatus, PIVOT_ZERO, PIVOT_NONZERO, PIVOT_UNKNOWN
+export AssumptionSet, status, normalize_poly, assume_zero, assume_nonzero
+export empty_assumptions, assumptions_from_domain
+export PivotCertificate, BranchBudget, CondLeaf, CondResult
+export conditional_rank, conditional_nullspace, conditional_rref, conditional_solve
+export leaves
 
 end # module ParametricLie
