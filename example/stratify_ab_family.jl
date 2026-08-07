@@ -1,7 +1,10 @@
 # example/stratify_ab_family.jl
 #
-# End-to-end v0.2.1 → v0.2.6 story for the 3D family
-#   [e1,e2] = a e2,  [e1,e3] = (a-b) e3  over QQ[a,b].
+# User-facing parametric workflow:
+#   family → stratify (classification + jumps)
+#         → pick a stratum → specialize → lie/analyze (Levi, …)
+#
+# CondTree is the internal IR behind stratify; prefer S = stratify(L).
 #
 # Run from the package root:
 #   julia --project=. example/stratify_ab_family.jl
@@ -13,7 +16,7 @@ import Nemo
 const QQ = Nemo.QQ
 
 println("="^60)
-println("ParametricLie — 3D family stratification (a, a−b)")
+println("ParametricLie — stratify → specialize → analyze")
 println("="^60)
 
 R, (a, b) = AbstractAlgebra.polynomial_ring(QQ, [:a, :b])
@@ -27,67 +30,90 @@ println("Family over QQ[a,b]:")
 println("  [e1,e2] = a·e2")
 println("  [e1,e3] = (a−b)·e3")
 println("  [e2,e3] = 0")
-println()
-println("v0.2.1 Jacobi identity: ", check_jacobi(L).ok)
+println("Jacobi identity: ", check_jacobi(L).ok)
 
-println()
-println("-"^60)
-println("v0.2.2 analyze_generic")
-println("-"^60)
-rg = analyze_generic(L)
-println("  center_dim  = ", dim(center(rg)))
-println("  derived_dim = ", dim(derived_algebra(generic_algebra(L))))
-println("  solvable    = ", is_solvable(rg))
-println("  nilpotent   = ", is_nilpotent(rg))
+# --- 1. Classification + jumps (user view) -----------------------------------
 
 suite = [:center, :derived_dim, :solvability, :nilpotency]
 println()
 println("-"^60)
-println("v0.2.4 analyze_conditional  suite=$suite")
+println("1. stratify  — certified parameter regions + jumps vs generic")
 println("-"^60)
-T = analyze_conditional(L; invariants = suite)
-show(stdout, MIME("text/plain"), T)
-println()
-println("complete? ", is_complete(T; invariants = suite))
-
-println()
-println("-"^60)
-println("v0.2.5 stratify + jump_table")
-println("-"^60)
-S = stratify(T; invariants = suite)
+S = stratify(L; invariants = suite)
 show(stdout, MIME("text/plain"), S)
 println()
-println("Confirmed jumps:")
-for j in jump_table(S)
-    show(stdout, MIME("text/plain"), j)
-    println()
-end
+println("IR behind this (not the user table):")
+show(stdout, MIME("text/plain"), S.tree)
+println()
+
+# --- 2. Pick a stratum and specialize ----------------------------------------
+
+# Region a−b = 0, a ≠ 0  (first confirmed jump in this family)
+idx = findfirst(s -> status(s.sigma, a - b) === PIVOT_ZERO &&
+                     status(s.sigma, a) === PIVOT_NONZERO, S.strata)
+idx === nothing && error("expected a−b=0, a≠0 stratum")
+st = S.strata[idx]
+
+point = Dict(a => QQ(1), b => QQ(1))  # satisfies Σ
+println("-"^60)
+println("2. specialize onto a chosen stratum")
+println("-"^60)
+println("  stratum Σ = ", st.sigma)
+println("  point     = (a,b) = (1,1)")
+println("  certified signature: ", join(
+    ["$k=$(st.signature[k])" for k in (:center_dim, :derived_dim, :is_solvable, :is_nilpotent)
+     if haskey(st.signature, k)], ", "))
+
+Lf = specialize(L, point)
+println()
+println("  specialize(L, point) → LieAlgebra over ", coefficient_ring(Lf))
+
+# --- 3. Full fiber analysis (Levi, …) on the specialized algebra --------------
 
 println()
 println("-"^60)
-println("v0.2.6 validate fibers vs v0.1 analyze")
+println("3. analyze(fiber)  — full lie toolkit on the concrete algebra")
 println("-"^60)
-checks = [
-    ("generic (1,2)", S.generic, Dict(a => QQ(1), b => QQ(2))),
-]
-for st in S.strata
-    cd = get(st.signature, :center_dim, nothing)
-    if cd == 3
-        push!(checks, ("abelian (0,0)", st, Dict(a => QQ(0), b => QQ(0))))
-    elseif cd == 1 && status(st.sigma, a) === PIVOT_ZERO
-        push!(checks, ("a=0,b=1", st, Dict(a => QQ(0), b => QQ(1))))
-    elseif cd == 1 && status(st.sigma, a - b) === PIVOT_ZERO
-        push!(checks, ("a=b=1", st, Dict(a => QQ(1), b => QQ(1))))
-    end
-end
+r = analyze(Lf)
+show(stdout, MIME("text/plain"), r)
+println()
 
-for (label, st, pt) in checks
-    st === nothing && continue
-    v = validate_stratum(L, st, pt)
-    println("  $label  ok=$(v.ok)  mismatches=$(v.mismatches)")
+lev = levi_decomposition(Lf)
+println("Levi decomposition on this fiber:")
+println("  radical dim = ", dim(lev.radical))
+println("  Levi dim    = ", dim(lev.levi))
+println("  (this family is solvable on every stratum → Levi is trivial)")
+
+# --- 4. Sanity: fiber matches stratum certificate ----------------------------
+
+println()
+println("-"^60)
+println("4. validate_stratum  — fiber analyze vs stratum signature")
+println("-"^60)
+v = validate_stratum(L, st, point)
+println("  ok=$(v.ok)  mismatches=$(v.mismatches)")
+
+# Spot-check other regions quickly
+for (label, pt) in (
+    ("generic (1,2)", Dict(a => QQ(1), b => QQ(2))),
+    ("a=0,b=1", Dict(a => QQ(0), b => QQ(1))),
+    ("abelian (0,0)", Dict(a => QQ(0), b => QQ(0))),
+)
+    i = findfirst(S.strata) do s
+        try
+            return validate_stratum(L, s, pt).ok
+        catch
+            return false
+        end
+    end
+    i === nothing && continue
+    vv = validate_stratum(L, S.strata[i], pt)
+    println("  $label  ok=$(vv.ok)")
 end
 
 println()
 println("="^60)
-println("Done.  docs: docs/parametric.md")
+println("Done.  User path: stratify → specialize → analyze / Levi / …")
+println("       CondTree remains available as S.tree when debugging.")
+println("  docs: docs/parametric.md")
 println("="^60)

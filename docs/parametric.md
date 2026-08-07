@@ -13,22 +13,21 @@ analysis trees, stratification, and fiber validation against the
 structure constants in k[a] or Frac(k[a])
         │
         ▼
-  Jacobi identity (exact)          ← specialize.jl / types metadata
+  Jacobi identity (exact)
         │
         ▼
-  generic analyze over Frac        ← specialize.jl → lie/analyze
+  stratify → regions + jumps vs generic     ← user view
+        │         ▲
+        │         │  CondTree / refine      ← internal IR
+        │         │  conditional LA under Σ
+        ▼
+  specialize a chosen stratum → fiber over k
         │
         ▼
-  conditional LA under Σ           ← assumptions + conditional_linalg
-        │     (UNKNOWN pivot ⇒ explicit split)
-        ▼
-  shared CondTree + refine         ← cond_tree.jl
+  analyze / Levi / Der / …                  ← src/lie on the fiber
         │
         ▼
-  stratify → strata + jump report  ← stratify.jl
-        │
-        ▼
-  compare / validate vs analyze    ← strata_compare.jl → lie/analyze
+  validate_stratum (optional sanity check)
 ```
 
 **Core rule:** never divide by a parameter-dependent expression silently.
@@ -114,18 +113,34 @@ already be nonzero on the branch.
 
 ---
 
-## Conditional analysis tree (state machine)
+## User path vs internal IR
 
-The IR is one **shared** tree refined leaf-by-leaf — not a Cartesian product of
-per-invariant forests.
+**User path** (what `show` emphasizes):
+
+```julia
+S = stratify(L; invariants = [:center, :derived_dim, :solvability, :nilpotency])
+# pick a Stratum → specialize → full lie toolkit on the fiber
+Lf = specialize(L, Dict(a => QQ(1), b => QQ(1)))
+analyze(Lf)                 # center, derived, solvability, …
+levi_decomposition(Lf)      # and any other src/lie API
+validate_stratum(L, st, point)
+```
+
+`show(S)` prints the certified parameter regions: one **GENERIC** signature,
+then each **JUMP** as a diff against generic (the two ends of the change).
+
+**Internal IR:** `CondTree` / `analyze_conditional` / `refine` is the shared
+assumption tree behind `stratify`. Prefer not to present it as a second
+classification table; inspect `S.tree` when debugging incomplete branches or
+certificates.
 
 ```julia
 T = cond_tree(L)
 T = refine(T, :center)
-T = refine(T, :killing_radical)
-T = refine(T, :derived_profile)
+T = refine(T, :derived_dim)
 # or
-T = analyze_conditional(L; invariants = [:center, :derived_dim, :solvability, :nilpotency])
+T = analyze_conditional(L; invariants = …)
+S = stratify(T)
 ```
 
 Each leaf stores \(\Sigma\), pivot trail, and an invariant bag. Refinement:
@@ -149,7 +164,8 @@ and the leaf is not budget-incomplete (`is_complete`).
 | `:radical` | solvable radical under \(\Sigma\) |
 | `:derivations` | `Der` dimension / matrices |
 
-Not required in this layer: Levi / ideal decomposition as parametric clients.
+Levi / ideal decomposition are **fiber** APIs (`src/lie`): run them after
+`specialize`, not as parametric `refine` clients (yet).
 
 ---
 
@@ -171,7 +187,8 @@ Keep three concepts distinct:
 | Algorithmic exceptional condition | locus where a generic certificate *may* fail |
 | Confirmed invariant jump | after analyzing \(p=0\), some invariant actually differs |
 
-`jump_table(S)` lists only confirmed jumps (nonempty signature changes).
+`jump_table(S)` lists only confirmed jumps (nonempty signature changes); the
+default `show(S)` already inlines those diffs.
 
 The stratification is **certified but not necessarily geometrically minimal**
 (no primary decomposition / canonical constructible simplification required).
@@ -202,19 +219,18 @@ Family over \(\mathbb{Q}[a,b]\):
 [e_1,e_2]=a e_2,\qquad [e_1,e_3]=(a-b)e_3,\qquad [e_2,e_3]=0.
 \]
 
-Conditional analysis of center / derived / solvability / nilpotency yields four
-leaves:
+`stratify` yields four certified regions; jumps vs generic:
 
-| \(\Sigma\) | center | derived | nilpotent |
-|------------|--------|---------|-----------|
-| \(a\neq 0,\ a-b\neq 0\) | 0 | 2 | false |
-| \(a\neq 0,\ a-b=0\) | 1 | 1 | false |
-| \(a=0,\ a-b\neq 0\) | 1 | 1 | false |
-| \(a=a-b=0\) | 3 | 0 | true |
+| \(\Sigma\) | vs generic |
+|------------|------------|
+| \(a\neq 0,\ a-b\neq 0\) | GENERIC (`center=0`, `derived=2`) |
+| \(a\neq 0,\ a-b=0\) | `center 0→1`, `derived 2→1` |
+| \(a=0,\ a-b\neq 0\) | same dim jump |
+| \(a=a-b=0\) | dims + becomes nilpotent |
 
-Relative to the generic leaf, the last three are confirmed jumps (dims and/or
-nilpotency). Specializing at \((1,2)\), \((1,1)\), \((0,1)\), \((0,0)\) matches
-`analyze` on each fiber.
+Then pick e.g. \((a,b)=(1,1)\), `specialize`, and run `analyze` /
+`levi_decomposition` on the fiber (this family is solvable everywhere → Levi
+trivial). Fiber signatures match the strata under `validate_stratum`.
 
 Runnable script: `example/stratify_ab_family.jl`.
 

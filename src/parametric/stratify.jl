@@ -54,18 +54,14 @@ struct JumpReport
 end
 
 function Base.show(io::IO, ::MIME"text/plain", J::JumpReport)
-    println(io, "JumpReport")
-    println(io, "  reference: ", J.reference.sigma)
-    println(io, "  target:    ", J.target.sigma)
+    println(io, "Jump  ", J.reference.sigma, "  →  ", J.target.sigma)
     if isempty(J.changed)
-        println(io, "  changed:   (none — candidate exceptional, no confirmed jump)")
+        println(io, "  (no confirmed invariant change)")
     else
-        println(io, "  changed:")
         for c in J.changed
-            println(io, "    ", c)
+            println(io, "  ", c)
         end
     end
-    isempty(J.unchanged) || println(io, "  unchanged: ", join(string.(J.unchanged), ", "))
 end
 
 """
@@ -83,21 +79,52 @@ struct Stratification{P}
     invariants::Vector{Symbol}
 end
 
+function _signature_line(sig::Dict{Symbol,Any})
+    parts = String[]
+    for k in (:center_dim, :derived_dim, :killing_rank, :radical_dim,
+              :is_solvable, :is_nilpotent)
+        haskey(sig, k) && push!(parts, "$k=$(sig[k])")
+    end
+    return join(parts, ", ")
+end
+
+function _jump_for_target(S::Stratification, st::Stratum)
+    for j in S.jumps
+        (j.target === st || j.target.sigma == st.sigma) && return j
+    end
+    return nothing
+end
+
 function Base.show(io::IO, ::MIME"text/plain", S::Stratification)
-    println(io, "Stratification($(length(S.strata)) strata; suite=$(S.invariants))")
-    if S.generic !== nothing
-        println(io, "  generic: ", S.generic)
-    else
-        println(io, "  generic: (none identified)")
+    n = length(S.strata)
+    n_jump = length(jump_table(S))
+    println(io, "Stratification: $n certified region$(n == 1 ? "" : "s")",
+        " (suite=$(S.invariants))")
+    if S.generic === nothing
+        println(io, "  (no generic region identified)")
     end
     for (i, st) in enumerate(S.strata)
-        S.generic !== nothing && st === S.generic && continue
-        tag = _is_confirmed_jump(S, st) ? "exceptional/jump" : "exceptional/candidate"
-        println(io, "  [$i] ($tag) ", st)
+        is_gen = S.generic !== nothing &&
+            (st === S.generic || st.sigma == S.generic.sigma)
+        if is_gen
+            println(io, "  [$i] GENERIC  Σ=$(st.sigma)")
+            line = _signature_line(st.signature)
+            isempty(line) || println(io, "         ", line)
+            continue
+        end
+        J = _jump_for_target(S, st)
+        if J !== nothing && !isempty(J.changed)
+            println(io, "  [$i] JUMP from generic  Σ=$(st.sigma)")
+            for c in J.changed
+                println(io, "         ", c)
+            end
+        else
+            println(io, "  [$i] exceptional (no confirmed jump)  Σ=$(st.sigma)")
+            line = _signature_line(st.signature)
+            isempty(line) || println(io, "         ", line)
+        end
     end
-    if !isempty(S.jumps)
-        println(io, "  jumps: $(length(S.jumps)) confirmed report(s)")
-    end
+    n_jump > 0 && println(io, "  ($n_jump confirmed jump$(n_jump == 1 ? "" : "s") vs generic)")
 end
 
 function _is_confirmed_jump(S::Stratification, st::Stratum)

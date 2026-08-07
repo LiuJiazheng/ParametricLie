@@ -12,4 +12,4 @@ julia --project=. example/stratify_ab_family.jl
 |--------|-------|----------------|
 | [`heisenberg.jl`](heisenberg.jl) | `lie` | 3D Heisenberg over ℚ — `analyze` + detail queries |
 | [`parametric_family.jl`](parametric_family.jl) | `parametric` | Jacobi over `QQ[a]`; `analyze_generic` vs `specialize` |
-| [`stratify_ab_family.jl`](stratify_ab_family.jl) | `parametric` | Full conditional tree → strata → jump table → fiber validation |
+| [`stratify_ab_family.jl`](stratify_ab_family.jl) | `parametric` | `stratify` → specialize a stratum → `analyze` / Levi; CondTree as IR |

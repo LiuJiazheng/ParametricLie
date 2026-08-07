@@ -721,17 +721,16 @@ function invariant_signature(leaf::CondLeaf)
 end
 
 function Base.show(io::IO, ::MIME"text/plain", T::CondTree)
-    println(io, "CondTree(dim=$(dim(T.algebra)), leaves=$(length(T))",
-        T.result.incomplete ? ", incomplete)" : ")")
-    for (i, leaf) in enumerate(leaves(T))
-        sig = invariant_signature(leaf)
-        parts = String[]
-        for k in (:center_dim, :derived_dim, :killing_rank, :is_solvable, :is_nilpotent)
-            haskey(sig, k) && push!(parts, "$k=$(sig[k])")
-        end
-        st = leaf.complete ? "" : " [incomplete]"
-        println(io, "  [$i] Σ=$(leaf.sigma)$st")
-        isempty(parts) || println(io, "      ", join(parts, ", "))
-    end
+    n = length(T)
+    n_inc = count(!l.complete for l in leaves(T))
+    status = T.result.incomplete || n_inc > 0 ? "incomplete" : "complete"
+    println(io, "CondTree (internal IR): dim=$(dim(T.algebra)), leaves=$n, $status")
+    println(io, "  Prefer stratify(T) for the user-facing parameter classification.")
+end
+
+function Base.show(io::IO, T::CondTree)
+    n = length(T)
+    status = T.result.incomplete ? "incomplete" : "complete"
+    print(io, "CondTree(dim=$(dim(T.algebra)), leaves=$n, $status)")
 end
 
