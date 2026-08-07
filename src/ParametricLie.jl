@@ -5,7 +5,10 @@ Exact symbolic toolkit for finite-dimensional Lie algebras given by structure
 constants (parametric families, stratification, cohomology — see
 `docs/POSITIONING.md`). Complements LieGroups.jl; does not replace it.
 
-v0.1: coefficient field via AbstractAlgebra/Nemo, structure, Jacobi, invariants, `analyze`.
+Layout:
+
+- `src/lie/` — single-algebra core (structure, invariants, `analyze`)
+- `src/parametric/` — parameterized families (`specialize` / generic analyze)
 """
 module ParametricLie
 
@@ -14,21 +17,20 @@ using SparseArrays
 using AbstractAlgebra
 using Nemo
 
-# Include order = dependency order.
-include("types.jl")
-include("bracket.jl")
-include("change_of_basis.jl")
-include("subspace.jl")
-include("center.jl")
-include("series.jl")
-include("killing.jl")
-include("radical.jl")
-include("quotient.jl")
-include("levi.jl")
-include("ideal_decomp.jl")
-include("derivations.jl")
-include("analyze.jl")
-include("specialize.jl")
+include("lie/types.jl")
+include("lie/bracket.jl")
+include("lie/change_of_basis.jl")
+include("lie/subspace.jl")
+include("lie/center.jl")
+include("lie/series.jl")
+include("lie/killing.jl")
+include("lie/radical.jl")
+include("lie/quotient.jl")
+include("lie/levi.jl")
+include("lie/ideal_decomp.jl")
+include("lie/derivations.jl")
+include("lie/analyze.jl")
+include("parametric/specialize.jl")
 
 export LieAlgebra, LieAlgebraElem, dim, coefficient_ring, base_ring, structure_constants
 export parameters, domain_denominators
