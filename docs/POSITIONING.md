@@ -81,7 +81,7 @@ Concrete uses:
 4. **Isomorphism / convention bridge** — invariants + change-of-basis between papers/codebases  
 5. **Central extensions** — \(H^2\) candidates for bias/drift/gauge states (algebraically complete)  
 6. **Deformation filter** — coboundary vs nontrivial \(H^2(\mathfrak{g},\mathfrak{g})\)  
-7. **Research infrastructure** — certificates, fixtures, future Lean; not one-off paper scripts  
+7. **Research infrastructure** — certificates, unit fixtures in tests, future Lean; not one-off paper scripts  
 
 **False claims to avoid:** replace LieGroups.jl; general ML speedups; AD as the product; cohomology solves robotics by itself.
 
@@ -134,7 +134,7 @@ No hard dependency on LieGroups.jl in v0.1.
 
 ### D4 — Coefficient fields via AbstractAlgebra (not a custom Field trait)
 
-See README / `src/types.jl`. Primary tests on `Nemo.QQ`; parametric families via
+See README / `src/lie/types.jl`. Primary tests on `Nemo.QQ`; parametric families via
 fraction fields of polynomial rings.
 
 ### D5 — Package name (deferred)

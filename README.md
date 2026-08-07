@@ -5,24 +5,28 @@ Exact symbolic toolkit for **finite-dimensional Lie algebras** defined by struct
 > Complements [LieGroups.jl](https://github.com/JuliaManifolds/LieGroups.jl) (smooth geometry / numerics on concrete groups).  
 > **Not** a competitor for `exp`/`log`/`hat`/`vee` on SO(3)/SE(3).
 
-Full positioning and locked decisions: [docs/POSITIONING.md](docs/POSITIONING.md)  
-Roadmap & testing philosophy: [ParametricLie_Project_Overview.md](ParametricLie_Project_Overview.md)
+| Doc | Contents |
+|-----|----------|
+| [docs/POSITIONING.md](docs/POSITIONING.md) | Ecosystem stance and brand |
+| [docs/lie.md](docs/lie.md) | Single-algebra core — API & algorithms (`src/lie/`) |
+| [docs/parametric.md](docs/parametric.md) | Families, conditional LA, stratification (`src/parametric/`) |
+| [ParametricLie_Project_Overview.md](ParametricLie_Project_Overview.md) | Roadmap |
 
 **Brand:** Exact · Parametric · Cohomological · Structure-aware
 
 ## Status
 
-**v0.1 (in progress)** — **symbolic core we own**: structure-constant `LieAlgebra` over an AA/Nemo field (tests on `Nemo.QQ`), `lie_bracket`, Jacobi certificates, classical invariants, `analyze`. Parametric / cohomology / LieGroups adapters come after.
+- **`lie`** — structure-constant `LieAlgebra` over AA/Nemo fields, Jacobi certificates, classical invariants, `analyze`.
+- **`parametric`** — polynomial/rational families, assumption-aware linear algebra, conditional analysis trees, `stratify` + fiber validation.
 
 ### Scalar fields
 
-We do **not** define a custom Field trait. Coefficient domains are [AbstractAlgebra.jl](https://nemocas.github.io/AbstractAlgebra.jl/stable/field_interface/) parents (`Field`) with elements `FieldElem`:
+Coefficient domains are [AbstractAlgebra.jl](https://nemocas.github.io/AbstractAlgebra.jl/stable/field_interface/) parents (`Field` / polynomial / fraction rings):
 
 | Domain | Parent (examples) |
 |--------|-------------------|
 | ℚ | `Nemo.QQ` |
 | 𝔽ₚ | `Nemo.GF(p)` |
-| ℝ / ℂ (arb) | `Nemo.RealField()`, `Nemo.ComplexField()` |
 | rational functions | `fraction_field(polynomial_ring(...))` |
 
 ### Ecosystem stance
@@ -30,44 +34,45 @@ We do **not** define a custom Field trait. Coefficient domains are [AbstractAlge
 | Layer | Responsibility |
 |-------|----------------|
 | **LieGroups.jl / Manifolds.jl** | Groups, exp/log, tangent geometry, numerical ops |
-| **This package** | Structure constants, exact algebra, parameters, cohomology, deformations |
-| **AbstractAlgebra / Nemo (/ Oscar)** | Fields, polynomials, exact linear algebra |
-| **Adapters (later, soft deps)** | Bridge concrete `LieAlgebra(G)` ↔ our view; specialize symbols → numerics |
-
-Shared concept names follow LieGroups where possible (`lie_bracket`). Structure-constant brackets are still implemented here; concrete-group kernels are not.
+| **This package** | Structure constants, exact algebra, parameters, stratification |
+| **AbstractAlgebra / Nemo** | Fields, polynomials, exact linear algebra |
 
 ## Requirements
 
-- Julia ≥ 1.10 ([juliaup](https://github.com/JuliaLang/juliaup) recommended)
+- Julia ≥ 1.10
 - Dependencies: `AbstractAlgebra`, `Nemo` (plus stdlibs `LinearAlgebra`, `SparseArrays`)
 
 ## Setup
 
 ```bash
-cd /path/to/LieGroupJulia
 julia --project=. -e 'using Pkg; Pkg.instantiate()'
 ```
 
-## Develop
-
-```bash
-julia --project=.
-```
+## Quick start
 
 ```julia
 using ParametricLie
-import Nemo   # use `import` to avoid clashing exports (dim, …)
+import AbstractAlgebra, Nemo
 
-L = LieAlgebra(Nemo.QQ, 3)  # abelian; or LieAlgebra(F, c) with n×n×n struct_consts
+F = Nemo.QQ
+H = LieAlgebra(F, 3, Dict((1, 2) => [0, 0, 1]))  # Heisenberg
+r = analyze(H)
+
+R, (a, b) = AbstractAlgebra.polynomial_ring(F, [:a, :b])
+L = LieAlgebra(R, 3, Dict(
+    (1, 2) => [R(0), a, R(0)],
+    (1, 3) => [R(0), R(0), a - b],
+))
+S = stratify(L; invariants = [:center, :derived_dim, :solvability, :nilpotency])
 ```
 
 ## Examples
 
 ```bash
 julia --project=. example/heisenberg.jl
+julia --project=. example/parametric_family.jl
+julia --project=. example/stratify_ab_family.jl
 ```
-
-See [`example/`](example/) for runnable use cases (`analyze` summary + detail queries).
 
 ## Test
 
@@ -75,31 +80,19 @@ See [`example/`](example/) for runnable use cases (`analyze` summary + detail qu
 julia --project=. -e 'using Pkg; Pkg.test()'
 ```
 
-| Path | Layer |
-|------|--------|
-| `test/unit/` | small components |
-| `test/identities/` | Jacobi and other identities |
-| `test/examples/` | known algebras + fixtures |
-| `test/property/` | random basis changes, etc. |
-| `test/differential/` | compare with Sage/GAP/Oscar |
-| `fixtures/` | expected invariants / structure data |
+Unit tests live under `test/unit/lie/` and `test/unit/parametric/`.
 
 ## Layout
 
 ```
 src/
   ParametricLie.jl
-  types.jl
-  bracket.jl           # lie_bracket, ad, Jacobi
-  change_of_basis.jl
-  subspace.jl          # LieSubspace certificates
-  center.jl
-  series.jl            # derived / lower central, solvable / nilpotent
-  killing.jl           # Killing form, Cartan criteria
-  derivations.jl
-  analyze.jl
-  # later: radical.jl, quotient.jl, levi.jl
-docs/POSITIONING.md
-test/
-fixtures/
+  lie/                 # single-algebra core
+  parametric/          # families, CondTree, stratify
+docs/
+  lie.md
+  parametric.md
+  POSITIONING.md
+test/unit/{lie,parametric}/
+example/
 ```

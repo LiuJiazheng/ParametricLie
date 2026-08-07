@@ -132,9 +132,9 @@ arbitrary \(c_{ij}^k\) over \(\mathbb{Q}\) / \(\mathbb{F}_p\); adapters come lat
 > field (esp. \(\mathbb{Q}\)), with reproducible certificates and a clear API
 > we own. Parametric / cohomological differentiation starts *after* this core.
 
-**UX contract (input / skeleton / output):** [docs/V0.1.md](docs/V0.1.md)
+**Single-algebra reference (`src/lie/`):** [docs/lie.md](docs/lie.md)
 
-**v0.2 parametric / stratification plan:** [docs/V0.2.md](docs/V0.2.md)
+**Parametric reference (`src/parametric/`):** [docs/parametric.md](docs/parametric.md)
 
 ------------------------------------------------------------------------
 
@@ -148,20 +148,18 @@ arbitrary \(c_{ij}^k\) over \(\mathbb{Q}\) / \(\mathbb{F}_p\); adapters come lat
 
 The hard core is not “polynomial \(c_{ij}^k\)” alone, but **conditional exact
 linear algebra**: Gaussian elimination must branch when a pivot such as
-\(a-b\) may vanish. Full contract and milestones:
+\(a-b\) may vanish.
 
-**UX / engineering plan:** [docs/V0.2.md](docs/V0.2.md)
+**Reference:** [docs/parametric.md](docs/parametric.md)
 
-Milestones (see that doc for tasks, risks, deliverables):
+Delivered as a continuous chain:
 
-| Milestone | Focus |
-|-----------|--------|
-| v0.2.1 | Polynomial / rational structure constants + Jacobi |
-| v0.2.2 | Specialization + generic Frac-field analysis |
-| v0.2.3 | Assumption-aware linear algebra (★ core) |
-| v0.2.4 | Exceptional-locus certificates |
-| v0.2.5 | Recursive parameter stratification |
-| v0.2.6 | Invariant comparison across strata |
+| Layer | Product |
+|-------|---------|
+| Conditional LA | pivot certificates under assumption set \(\Sigma\) |
+| Analysis tree | shared `CondTree` + incremental `refine` / `analyze_conditional` |
+| Stratification | `stratify` → strata + confirmed jump reports |
+| Validation | `compare`, specialize ↔ `analyze` fiber checks |
 
 ------------------------------------------------------------------------
 
@@ -196,17 +194,13 @@ Implement
 
 # 5. Core Modules
 
--   Core
--   Linear
--   Structure
--   Parametric
--   Exterior
--   Cohomology
--   Extensions
--   Deformations
--   Isomorphism
+Current source layout:
 
-Keep the initial implementation simple and split modules gradually.
+-   `src/lie/` — single-algebra structure & invariants (`docs/lie.md`)
+-   `src/parametric/` — families, conditional LA, stratification (`docs/parametric.md`)
+
+Later packages / folders can add exterior algebra, cohomology, deformations,
+isomorphism helpers without mixing them into the two layers above.
 
 ------------------------------------------------------------------------
 
@@ -336,26 +330,10 @@ Random parameter specializations
 
 # 9. Testing Dataset
 
-A growing fixture collection:
-
-    fixtures/
-
-    abelian
-    heisenberg
-    sl2
-    affine
-    bianchi
-    nilpotent
-    known_cohomology
-
-Each fixture stores
-
--   expected invariants
--   Betti numbers
--   derivation dimensions
--   Killing rank
-
-forming a reusable benchmark suite.
+Classical examples (abelian, Heisenberg, \(\mathfrak{sl}_2\), parametric
+\(a\) / \(a-b\) families, …) are exercised directly in
+`test/unit/lie/` and `test/unit/parametric/`. Runnable demos live under
+`example/`.
 
 ------------------------------------------------------------------------
 
