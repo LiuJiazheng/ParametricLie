@@ -82,9 +82,15 @@ julia --project=. -e 'using Pkg; Pkg.test()'
 src/
   ParametricLie.jl
   types.jl
-  bracket.jl       # lie_bracket (+ bracket alias)
-  invariants.jl
+  bracket.jl           # lie_bracket, ad, Jacobi
+  change_of_basis.jl
+  subspace.jl          # LieSubspace certificates
+  center.jl
+  series.jl            # derived / lower central, solvable / nilpotent
+  killing.jl           # Killing form, Cartan criteria
+  derivations.jl
   analyze.jl
+  # later: radical.jl, quotient.jl, levi.jl
 docs/POSITIONING.md
 test/
 fixtures/

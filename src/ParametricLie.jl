@@ -14,17 +14,24 @@ using SparseArrays
 using AbstractAlgebra
 using Nemo
 
-# Core building blocks for v0.1 — implement these next.
+# Include order = dependency order. Future: radical.jl, quotient.jl, levi.jl.
 include("types.jl")
 include("bracket.jl")
-include("invariants.jl")
+include("change_of_basis.jl")
+include("subspace.jl")
+include("center.jl")
+include("series.jl")
+include("killing.jl")
+include("derivations.jl")
 include("analyze.jl")
 
 export LieAlgebra, LieAlgebraElem, dim, coefficient_ring, base_ring, structure_constants
 export coords, basis_elem
 export lie_bracket, lie_bracket!, bracket, ad, check_jacobi, check_antisymmetry, JacobiCertificate
 export center, derived_series, lower_central_series, derived_algebra
-export is_solvable, is_nilpotent, killing_form, derivations, change_of_basis
+export is_solvable, is_nilpotent, derivations, change_of_basis
+export killing_form, killing_rank, killing_radical, killing_orthogonal
+export cartan_orthogonal, is_cartan_solvable, is_semisimple
 export LieSubspace, basis_matrix, basis_elems, full_space, zero_space
 export commutator_span, LieSeries, SeriesKind, terms, layers
 export analyze

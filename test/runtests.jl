@@ -11,6 +11,7 @@ import Nemo
     include("unit/change_of_basis.jl")
     include("unit/center.jl")
     include("unit/series.jl")
+    include("unit/killing.jl")
 
     # Layer 2 — mathematical identities (Jacobi, …)
     # include("identities/jacobi.jl")
