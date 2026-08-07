@@ -61,6 +61,14 @@ import Nemo   # use `import` to avoid clashing exports (dim, …)
 L = LieAlgebra(Nemo.QQ, 3)  # abelian; or LieAlgebra(F, c) with n×n×n struct_consts
 ```
 
+## Examples
+
+```bash
+julia --project=. example/heisenberg.jl
+```
+
+See [`example/`](example/) for runnable use cases (`analyze` summary + detail queries).
+
 ## Test
 
 ```bash
