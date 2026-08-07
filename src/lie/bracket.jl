@@ -158,6 +158,13 @@ function lie_bracket(L::LieAlgebra{C}, x::AbstractVector, y::AbstractVector) whe
 end
 
 """
+    bracket
+
+Optional alias for [`lie_bracket`](@ref) (LieGroups-aligned naming).
+"""
+const bracket = lie_bracket
+
+"""
     lie_bracket!(z, L, x, y)
 
 In-place bracket into preallocated coordinate vector `z`.

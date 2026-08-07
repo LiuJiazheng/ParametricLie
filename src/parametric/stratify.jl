@@ -127,16 +127,6 @@ function Base.show(io::IO, ::MIME"text/plain", S::Stratification)
     n_jump > 0 && println(io, "  ($n_jump confirmed jump$(n_jump == 1 ? "" : "s") vs generic)")
 end
 
-function _is_confirmed_jump(S::Stratification, st::Stratum)
-    any(j -> j.target === st && !isempty(j.changed), S.jumps) && return true
-    # identity compare by sigma string if === fails after copy
-    for j in S.jumps
-        !isempty(j.changed) || continue
-        j.target.sigma == st.sigma && return true
-    end
-    return false
-end
-
 function _stratum_from_leaf(leaf::CondLeaf{P}) where {P}
     wit = Dict{Symbol,Any}()
     for k in (:center_basis, :derived_basis, :killing_radical_basis, :radical_basis, :der_basis)
