@@ -14,7 +14,7 @@ using SparseArrays
 using AbstractAlgebra
 using Nemo
 
-# Include order = dependency order. Future: radical.jl, quotient.jl, levi.jl.
+# Include order = dependency order.
 include("types.jl")
 include("bracket.jl")
 include("change_of_basis.jl")
@@ -22,6 +22,10 @@ include("subspace.jl")
 include("center.jl")
 include("series.jl")
 include("killing.jl")
+include("radical.jl")
+include("quotient.jl")
+include("levi.jl")
+include("ideal_decomp.jl")
 include("derivations.jl")
 include("analyze.jl")
 
@@ -33,7 +37,12 @@ export is_solvable, is_nilpotent, derivations, change_of_basis
 export killing_form, killing_rank, killing_radical, killing_orthogonal
 export cartan_orthogonal, is_cartan_solvable, is_semisimple
 export LieSubspace, basis_matrix, basis_elems, full_space, zero_space
-export commutator_span, LieSeries, SeriesKind, terms, layers
+export commutator_span, complement, is_subalgebra, is_ideal
+export LieSeries, SeriesKind, terms, layers
+export radical, radical_derived_series
+export QuotientAlgebra, quotient_algebra
+export LeviDecomposition, levi_decomposition, levi_subalgebra
+export adjoint_commutant, ideal_decomposition, is_simple
 export analyze
 
 end # module ParametricLie

@@ -12,6 +12,8 @@ import Nemo
     include("unit/center.jl")
     include("unit/series.jl")
     include("unit/killing.jl")
+    include("unit/levi.jl")
+    include("unit/ideal_decomp.jl")
 
     # Layer 2 — mathematical identities (Jacobi, …)
     # include("identities/jacobi.jl")
