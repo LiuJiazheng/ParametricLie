@@ -33,7 +33,8 @@ export LieAlgebra, LieAlgebraElem, dim, coefficient_ring, base_ring, structure_c
 export coords, basis_elem
 export lie_bracket, lie_bracket!, bracket, ad, check_jacobi, check_antisymmetry, JacobiCertificate
 export center, derived_series, lower_central_series, derived_algebra
-export is_solvable, is_nilpotent, derivations, change_of_basis
+export is_solvable, is_nilpotent, derivations, Derivations, basis_matrices
+export is_derivation, apply_derivation, change_of_basis
 export killing_form, killing_rank, killing_radical, killing_orthogonal
 export cartan_orthogonal, is_cartan_solvable, is_semisimple
 export LieSubspace, basis_matrix, basis_elems, full_space, zero_space
