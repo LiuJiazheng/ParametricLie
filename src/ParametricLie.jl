@@ -44,6 +44,6 @@ export radical, radical_derived_series
 export QuotientAlgebra, quotient_algebra
 export LeviDecomposition, levi_decomposition, levi_subalgebra
 export adjoint_commutant, ideal_decomposition, is_simple
-export analyze
+export analyze, LieAlgebraReport, jacobi, levi_kind, simple_factor_dims
 
 end # module ParametricLie
