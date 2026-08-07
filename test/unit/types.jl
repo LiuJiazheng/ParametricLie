@@ -37,4 +37,5 @@
     Kt = AbstractAlgebra.fraction_field(P)
     Lt = LieAlgebra(Kt, 1)
     @test coefficient_ring(Lt) === Kt
+    @test length(parameters(Lt)) == 1
 end

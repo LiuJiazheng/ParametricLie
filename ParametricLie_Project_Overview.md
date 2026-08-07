@@ -134,21 +134,34 @@ arbitrary \(c_{ij}^k\) over \(\mathbb{Q}\) / \(\mathbb{F}_p\); adapters come lat
 
 **UX contract (input / skeleton / output):** [docs/V0.1.md](docs/V0.1.md)
 
+**v0.2 parametric / stratification plan:** [docs/V0.2.md](docs/V0.2.md)
+
 ------------------------------------------------------------------------
 
 ## v0.2 --- Parameterized Lie Algebras
 
-Add
+**Goal (one sentence):**
 
--   Polynomial coefficients
--   Generic computation
--   Specialization
--   Exceptional parameter detection
--   Parameter stratification
+> Compute classical invariants of a **parameter family** \(L_{\mathbf{a}}\)
+> generically, and **certify exceptional loci** where those invariants jump
+> (parameter stratification).
 
-Goal:
+The hard core is not “polynomial \(c_{ij}^k\)” alone, but **conditional exact
+linear algebra**: Gaussian elimination must branch when a pivot such as
+\(a-b\) may vanish. Full contract and milestones:
 
-Automatically detect where structural invariants change.
+**UX / engineering plan:** [docs/V0.2.md](docs/V0.2.md)
+
+Milestones (see that doc for tasks, risks, deliverables):
+
+| Milestone | Focus |
+|-----------|--------|
+| v0.2.1 | Polynomial / rational structure constants + Jacobi |
+| v0.2.2 | Specialization + generic Frac-field analysis |
+| v0.2.3 | Assumption-aware linear algebra (★ core) |
+| v0.2.4 | Exceptional-locus certificates |
+| v0.2.5 | Recursive parameter stratification |
+| v0.2.6 | Invariant comparison across strata |
 
 ------------------------------------------------------------------------
 

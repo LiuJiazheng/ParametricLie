@@ -30,8 +30,10 @@ include("derivations.jl")
 include("analyze.jl")
 
 export LieAlgebra, LieAlgebraElem, dim, coefficient_ring, base_ring, structure_constants
+export parameters, domain_denominators
 export coords, basis_elem
-export lie_bracket, lie_bracket!, bracket, ad, check_jacobi, check_antisymmetry, JacobiCertificate
+export lie_bracket, lie_bracket!, bracket, ad, check_jacobi, check_antisymmetry
+export JacobiCertificate, JacobiResidual
 export center, derived_series, lower_central_series, derived_algebra
 export is_solvable, is_nilpotent, derivations, Derivations, basis_matrices
 export is_derivation, apply_derivation, change_of_basis

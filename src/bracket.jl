@@ -1,16 +1,47 @@
-# Bracket, adjoint, and Jacobi (v0.1)
+# Bracket, adjoint, and Jacobi.
 # Naming: lie_bracket / lie_bracket! aligned with LieGroups.jl.
 # Math: [x,y]_k = ∑_{i,j} x_i y_j a_{ijk};  ad_x has (ad_x)[k,j] = ∑_i x_i a_{ijk}.
+#
+# v0.2.1: Jacobi over free-parameter rings is exact identity testing —
+# identity certificate if all residuals vanish; otherwise explicit nonzero
+# residuals (no root-finding / stratification).
+
+"""
+    JacobiResidual
+
+Explicit nonzero Jacobi residual for one ordered basis triple `(i,j,k)`.
+
+- `residual` — coordinate vector of the Jacobi sum after clearing denominators
+  (polynomial identity form)
+- `domain` — denominators that must be nonzero for the (rational) expression to
+  be defined; empty over polynomial rings / fields without denominators
+"""
+struct JacobiResidual{C}
+    triple::Tuple{Int,Int,Int}
+    residual::Vector{C}
+    domain::Vector
+end
+
+function Base.show(io::IO, r::JacobiResidual)
+    print(io, "JacobiResidual(triple=$(r.triple), residual=$(r.residual)")
+    isempty(r.domain) || print(io, ", domain≠0: $(r.domain)")
+    print(io, ")")
+end
 
 """
     JacobiCertificate
 
-Result of [`check_jacobi`](@ref): antisymmetry and Jacobi witnesses.
+Result of [`check_jacobi`](@ref).
+
+- `ok` — antisymmetry and Jacobi hold identically over the coefficient ring
+- `residuals` — explicit nonzero Jacobi residuals (empty when `ok`);
+  does **not** solve their zero loci
 """
 struct JacobiCertificate
     ok::Bool
-    antisym_failing::Vector{Tuple{Int,Int,Int}}  # (i,j,k) with a[i,j,k] + a[j,i,k] ≠ 0
-    jacobi_failing::Vector{Tuple{Int,Int,Int}}   # basis triples with nonzero Jacobi sum
+    antisym_failing::Vector{Tuple{Int,Int,Int}}
+    jacobi_failing::Vector{Tuple{Int,Int,Int}}
+    residuals::Vector{JacobiResidual}
 end
 
 Base.Bool(c::JacobiCertificate) = c.ok
@@ -21,20 +52,73 @@ function Base.getproperty(c::JacobiCertificate, s::Symbol)
     return getfield(c, s)
 end
 
+function Base.show(io::IO, c::JacobiCertificate)
+    if c.ok
+        print(io, "JacobiCertificate(identity)")
+    else
+        print(
+            io,
+            "JacobiCertificate(nonidentity; antisym=$(length(c.antisym_failing)), ",
+            "jacobi=$(length(c.jacobi_failing)), residuals=$(length(c.residuals)))",
+        )
+    end
+end
+
+# --- residual normalization (poly identity / Frac numerators) ---------------
+
+"""
+Clear a single coefficient to polynomial residual form.
+
+Returns `(poly_or_elem, domain_denom_or_nothing)`.
+Over `Frac(R)`, uses `numerator` / `denominator` and records `denom ≠ 0`.
+Over a polynomial ring or ordinary field, returns the element itself.
+"""
+function _identity_form(x)
+    R = parent(x)
+    if R isa AbstractAlgebra.FracField
+        num = numerator(x)
+        den = denominator(x)
+        return num, (isone(den) ? nothing : den)
+    end
+    return x, nothing
+end
+
+function _normalize_residual_coords(coords::Vector{C}) where {C}
+    n = length(coords)
+    # Determine output element type from first cleared numerator
+    out = Vector(undef, n)
+    domain = Any[]
+    seen = Set{String}()
+    for i in 1:n
+        poly, den = _identity_form(coords[i])
+        out[i] = poly
+        if den !== nothing
+            s = string(den)
+            if !(s in seen)
+                push!(seen, s)
+                push!(domain, den)
+            end
+        end
+    end
+    C1 = typeof(out[1])
+    residual = C1[out[i] for i in 1:n]
+    return residual, domain
+end
+
 # --- coordinate helpers -----------------------------------------------------
 
-function _coords_vector(L::LieAlgebra{C}, x::AbstractVector) where {C<:FieldElem}
+function _coords_vector(L::LieAlgebra{C}, x::AbstractVector) where {C<:RingElem}
     n = dim(L)
     length(x) == n || throw(ArgumentError("expected length $n, got $(length(x))"))
-    F = coefficient_ring(L)
+    R = coefficient_ring(L)
     v = Vector{C}(undef, n)
     for i in 1:n
-        v[i] = F(x[i])
+        v[i] = R(x[i])
     end
     return v
 end
 
-_coords_vector(::LieAlgebra{C}, x::Vector{C}) where {C<:FieldElem} = x
+_coords_vector(::LieAlgebra{C}, x::Vector{C}) where {C<:RingElem} = x
 
 function _check_same_parent(x::LieAlgebraElem, y::LieAlgebraElem)
     x.parent === y.parent || throw(ArgumentError("elements must belong to the same LieAlgebra"))
@@ -51,19 +135,20 @@ Lie bracket `[x, y]` via structure constants (triple loop):
     [x,y]_k = ∑_{i,j} x_i y_j a_{ijk}.
 
 Accepts `LieAlgebraElem` or coordinate vectors. Elem inputs return an elem.
+Works over fields and free-parameter polynomial / fraction rings.
 """
-function lie_bracket(L::LieAlgebra{C}, x::LieAlgebraElem{C}, y::LieAlgebraElem{C}) where {C<:FieldElem}
+function lie_bracket(L::LieAlgebra{C}, x::LieAlgebraElem{C}, y::LieAlgebraElem{C}) where {C<:RingElem}
     x.parent === L || throw(ArgumentError("x does not belong to L"))
     y.parent === L || throw(ArgumentError("y does not belong to L"))
     return LieAlgebraElem{C}(L, lie_bracket(L, x.coords, y.coords))
 end
 
-function lie_bracket(x::LieAlgebraElem{C}, y::LieAlgebraElem{C}) where {C<:FieldElem}
+function lie_bracket(x::LieAlgebraElem{C}, y::LieAlgebraElem{C}) where {C<:RingElem}
     L = _check_same_parent(x, y)
     return lie_bracket(L, x, y)
 end
 
-function lie_bracket(L::LieAlgebra{C}, x::AbstractVector, y::AbstractVector) where {C<:FieldElem}
+function lie_bracket(L::LieAlgebra{C}, x::AbstractVector, y::AbstractVector) where {C<:RingElem}
     xv = _coords_vector(L, x)
     yv = _coords_vector(L, y)
     n = dim(L)
@@ -77,14 +162,16 @@ end
 
 In-place bracket into preallocated coordinate vector `z`.
 """
-function lie_bracket!(z::AbstractVector{C}, L::LieAlgebra{C}, x::AbstractVector{C}, y::AbstractVector{C}) where {C<:FieldElem}
+function lie_bracket!(
+    z::AbstractVector{C}, L::LieAlgebra{C}, x::AbstractVector{C}, y::AbstractVector{C}
+) where {C<:RingElem}
     n = dim(L)
     length(z) == n && length(x) == n && length(y) == n ||
         throw(ArgumentError("dimension mismatch"))
     a = structure_constants(L)
-    F = coefficient_ring(L)
+    R = coefficient_ring(L)
     for k in 1:n
-        z[k] = zero(F)
+        z[k] = zero(R)
     end
     for i in 1:n
         iszero(x[i]) && continue
@@ -111,14 +198,14 @@ Adjoint matrix of `x`: AbstractAlgebra matrix `A_x` with
 
 Computed on demand from structure constants (not cached on `L`).
 """
-function ad(L::LieAlgebra{C}, x::AbstractVector) where {C<:FieldElem}
+function ad(L::LieAlgebra{C}, x::AbstractVector) where {C<:RingElem}
     xv = _coords_vector(L, x)
     n = dim(L)
-    F = coefficient_ring(L)
+    R = coefficient_ring(L)
     a = structure_constants(L)
-    A = zero_matrix(F, n, n)
+    A = zero_matrix(R, n, n)
     for j in 1:n, k in 1:n
-        s = zero(F)
+        s = zero(R)
         for i in 1:n
             iszero(xv[i]) && continue
             s += xv[i] * a[i, j, k]
@@ -128,9 +215,9 @@ function ad(L::LieAlgebra{C}, x::AbstractVector) where {C<:FieldElem}
     return A
 end
 
-ad(L::LieAlgebra{C}, x::LieAlgebraElem{C}) where {C<:FieldElem} = ad(L, x.coords)
+ad(L::LieAlgebra{C}, x::LieAlgebraElem{C}) where {C<:RingElem} = ad(L, x.coords)
 
-function ad(x::LieAlgebraElem{C}) where {C<:FieldElem}
+function ad(x::LieAlgebraElem{C}) where {C<:RingElem}
     return ad(x.parent, x)
 end
 
@@ -144,7 +231,7 @@ Check `a[i,j,k] + a[j,i,k] == 0` for all indices (includes `[e_i,e_i]=0`).
 Returns failing triples `(i,j,k)`. Dense constructors do not enforce this;
 DOF constructors usually do, but we still verify the stored tensor.
 """
-function check_antisymmetry(L::LieAlgebra{C}) where {C<:FieldElem}
+function check_antisymmetry(L::LieAlgebra{C}) where {C<:RingElem}
     n = dim(L)
     a = structure_constants(L)
     failing = Tuple{Int,Int,Int}[]
@@ -157,25 +244,28 @@ function check_antisymmetry(L::LieAlgebra{C}) where {C<:FieldElem}
 end
 
 """
-    check_jacobi(L::LieAlgebra)
+    check_jacobi(L::LieAlgebra) -> JacobiCertificate
 
-Validate Lie bracket axioms on the stored structure constants:
+Validate Lie bracket axioms by **exact identity** over the coefficient ring:
 
-1. **Antisymmetry** (and skew-diagonals): `a[i,j,k] + a[j,i,k] == 0`
-   i.e. `[e_i,e_j] = -[e_j,e_i]`, including `[e_i,e_i] = 0`.
-2. **Jacobi** on all basis triples:
-   `[e_i,[e_j,e_k]] + [e_j,[e_k,e_i]] + [e_k,[e_i,e_j]] = 0`.
+1. **Antisymmetry:** `a[i,j,k] + a[j,i,k] == 0`
+2. **Jacobi** on all basis triples.
 
-Returns a [`JacobiCertificate`](@ref). Important for **dense** input, which does
-not auto-enforce antisymmetry; also catches corrupted / inconsistent tensors.
+Over a free-parameter polynomial ring `k[a₁,…]`, parameters are algebraically
+independent: `f = 0` means `f` is the zero polynomial. Over `Frac(R)`,
+`p/q = 0` means `p = 0` (with domain condition `q ≠ 0` recorded on residuals).
+
+On success returns an **identity** certificate (`ok = true`, empty residuals).
+On failure returns **explicit nonzero residuals** — it does **not** solve their
+zero sets or stratify parameter space (v0.2.3+).
 """
-function check_jacobi(L::LieAlgebra{C}) where {C<:FieldElem}
+function check_jacobi(L::LieAlgebra{C}) where {C<:RingElem}
     antisym_failing = check_antisymmetry(L)
 
     n = dim(L)
     jacobi_failing = Tuple{Int,Int,Int}[]
-    # Jacobi is only meaningful if we treat the tensor as a bracket; still report
-    # even when antisymmetry fails (helps debugging dense tables).
+    residuals = JacobiResidual[]
+
     for i in 1:n, j in 1:n, k in 1:n
         ei = basis_elem(L, i)
         ej = basis_elem(L, j)
@@ -185,9 +275,14 @@ function check_jacobi(L::LieAlgebra{C}) where {C<:FieldElem}
             lie_bracket(L, ek, lie_bracket(L, ei, ej)).coords
         if !all(iszero, s)
             push!(jacobi_failing, (i, j, k))
+            res_coords, domain = _normalize_residual_coords(s)
+            # Skip if clearing made everything zero (should not happen if iszero worked)
+            if !all(iszero, res_coords)
+                push!(residuals, JacobiResidual( (i, j, k), res_coords, domain ))
+            end
         end
     end
 
     ok = isempty(antisym_failing) && isempty(jacobi_failing)
-    return JacobiCertificate(ok, antisym_failing, jacobi_failing)
+    return JacobiCertificate(ok, antisym_failing, jacobi_failing, residuals)
 end
