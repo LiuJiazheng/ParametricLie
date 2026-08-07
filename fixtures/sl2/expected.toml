@@ -1,9 +1,0 @@
-# Expected invariants for sl₂ over ℚ.
-
-name = "sl2"
-dim = 3
-center_dim = 0
-is_solvable = false
-is_nilpotent = false
-killing_rank = 3
-derivation_dim = 3  # Der = Inn ≅ sl₂

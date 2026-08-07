@@ -5,23 +5,21 @@ import AbstractAlgebra
 import Nemo
 
 @testset "ParametricLie.jl" begin
-    # Layer 1 — unit tests for small components
-    include("unit/types.jl")
-    include("unit/bracket.jl")
-    include("unit/change_of_basis.jl")
-    include("unit/center.jl")
-    include("unit/series.jl")
-    include("unit/killing.jl")
-    include("unit/levi.jl")
-    include("unit/ideal_decomp.jl")
-    include("unit/derivations.jl")
-    include("unit/analyze.jl")
-    include("unit/parametric.jl")
-    include("unit/specialize.jl")
+    # --- lie (single-algebra core) -------------------------------------------
+    include("unit/lie/types.jl")
+    include("unit/lie/bracket.jl")
+    include("unit/lie/change_of_basis.jl")
+    include("unit/lie/center.jl")
+    include("unit/lie/series.jl")
+    include("unit/lie/killing.jl")
+    include("unit/lie/levi.jl")
+    include("unit/lie/ideal_decomp.jl")
+    include("unit/lie/derivations.jl")
+    include("unit/lie/analyze.jl")
 
-    # Layer 2 — mathematical identities (Jacobi, …)
-    # include("identities/jacobi.jl")
-
-    # Layer 3 — known examples / fixtures
-    include("examples/smoke.jl")
+    # --- parametric (families & stratification) ------------------------------
+    include("unit/parametric/parametric.jl")
+    include("unit/parametric/specialize.jl")
+    include("unit/parametric/conditional.jl")
+    include("unit/parametric/stratify.jl")
 end
