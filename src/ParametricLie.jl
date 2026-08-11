@@ -9,6 +9,7 @@ Layout:
 
 - `src/lie/` — single-algebra core (structure, invariants, `analyze`)
 - `src/parametric/` — parameterized families, conditional LA, stratification
+- `src/cohomology/` — exterior algebra and Chevalley–Eilenberg cohomology
 """
 module ParametricLie
 
@@ -40,6 +41,12 @@ include("parametric/conditional_linalg.jl")
 include("parametric/cond_tree.jl")
 include("parametric/stratify.jl")
 include("parametric/strata_compare.jl")
+
+# --- cohomology (exterior algebra, modules, CE complex, central extensions) --
+include("cohomology/exterior.jl")
+include("cohomology/module.jl")
+include("cohomology/ce.jl")
+include("cohomology/central_extension.jl")
 
 export LieAlgebra, LieAlgebraElem, dim, coefficient_ring, base_ring, structure_constants
 export parameters, domain_denominators
@@ -75,5 +82,13 @@ export unresolved_invariants, invariant_signature
 export Stratum, JumpEntry, JumpReport, Stratification
 export stratify, jump_table
 export StratumComparison, compare, validate_stratum, validate_stratification
+export ExteriorAlgebra, ExteriorElem, exterior_algebra, ambient_dim
+export multi_indices, coord_index, exterior_generator, exterior_monomial
+export wedge, homogeneous_part, support_degrees, is_homogeneous, exterior_degree
+export interior_product, form_eval
+export LieModule, trivial_module, adjoint_module, action_matrices, act
+export CEComplex, ce_complex, coefficient_module, cochain_dim
+export ce_differential, cocycles, coboundaries, cohomology, CohomologyGroup
+export central_extension, is_trivial_cocycle
 
 end # module ParametricLie

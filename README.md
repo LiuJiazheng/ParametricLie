@@ -10,6 +10,7 @@ Exact symbolic toolkit for **finite-dimensional Lie algebras** defined by struct
 | [docs/POSITIONING.md](docs/POSITIONING.md) | Ecosystem stance and brand |
 | [docs/lie.md](docs/lie.md) | Single-algebra core — API & algorithms (`src/lie/`) |
 | [docs/parametric.md](docs/parametric.md) | Families, conditional LA, stratification (`src/parametric/`) |
+| [docs/cohomology.md](docs/cohomology.md) | CE cohomology — what you can do, API, examples (`src/cohomology/`) |
 | [ParametricLie_Project_Overview.md](ParametricLie_Project_Overview.md) | Roadmap |
 
 **Brand:** Exact · Parametric · Cohomological · Structure-aware
@@ -18,6 +19,7 @@ Exact symbolic toolkit for **finite-dimensional Lie algebras** defined by struct
 
 - **`lie`** — structure-constant `LieAlgebra` over AA/Nemo fields, Jacobi certificates, classical invariants, `analyze`.
 - **`parametric`** — polynomial/rational families, assumption-aware linear algebra, conditional analysis trees, `stratify` + fiber validation.
+- **`cohomology`** — exterior algebra \(\Lambda^\bullet V\), coefficient modules, lazy CE \(H^\bullet\).
 
 ### Scalar fields
 

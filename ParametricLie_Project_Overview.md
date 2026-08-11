@@ -165,18 +165,19 @@ Delivered as a continuous chain:
 
 ## v0.3 --- Cohomology
 
-Implement
+Engine: full exterior algebra, general coefficient modules, induced CE \(d\),
+and \(H^k = Z^k/B^k\) with cocycle representatives. Central extensions are a
+trivial-module \(H^2\) **test**, not a library module.
 
--   Exterior algebra
--   CE complex
--   Differential
--   H\^k
--   Explicit cocycles
--   Central extensions
+In progress:
 
-Goal:
+-   [x] Exterior algebra \(\Lambda^\bullet V\) (`src/cohomology/exterior.jl`)
+-   [x] Coefficient modules (trivial + adjoint)
+-   [x] Induced \(d\) and lazy cached \(Z/B/H\) (`ce_complex`)
+-   [x] Central extensions from trivial-module \(H^2\) (application / test)
 
-Turn cohomology into a practical computational tool.
+Goal: turn cohomology into a practical computational tool. See
+[`docs/cohomology.md`](docs/cohomology.md).
 
 ------------------------------------------------------------------------
 
@@ -198,9 +199,7 @@ Current source layout:
 
 -   `src/lie/` — single-algebra structure & invariants (`docs/lie.md`)
 -   `src/parametric/` — families, conditional LA, stratification (`docs/parametric.md`)
-
-Later packages / folders can add exterior algebra, cohomology, deformations,
-isomorphism helpers without mixing them into the two layers above.
+-   `src/cohomology/` — exterior algebra, modules, CE complex (`docs/cohomology.md`)
 
 ------------------------------------------------------------------------
 

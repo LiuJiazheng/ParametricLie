@@ -22,4 +22,9 @@ import Nemo
     include("unit/parametric/specialize.jl")
     include("unit/parametric/conditional.jl")
     include("unit/parametric/stratify.jl")
+
+    # --- cohomology (exterior algebra, CE complex) ---------------------------
+    include("unit/cohomology/exterior.jl")
+    include("unit/cohomology/ce.jl")
+    include("unit/cohomology/central_extension.jl")
 end
