@@ -44,14 +44,19 @@ end
     JumpReport
 
 Confirmed jumps from a reference stratum to an exceptional stratum.
-Unchanged invariants are listed separately.
+Unchanged invariants are listed separately. Optional [`JumpCause`](@ref) from
+[`explain_jumps!`](@ref).
 """
-struct JumpReport
+mutable struct JumpReport
     reference::Stratum
     target::Stratum
     changed::Vector{JumpEntry}
     unchanged::Vector{Symbol}
+    cause::Any   # Union{Nothing,JumpCause}; Any avoids forward-dep on jump_explain
 end
+
+JumpReport(ref::Stratum, tgt::Stratum, changed, unchanged) =
+    JumpReport(ref, tgt, changed, unchanged, nothing)
 
 function Base.show(io::IO, ::MIME"text/plain", J::JumpReport)
     println(io, "Jump  ", J.reference.sigma, "  →  ", J.target.sigma)
@@ -61,6 +66,9 @@ function Base.show(io::IO, ::MIME"text/plain", J::JumpReport)
         for c in J.changed
             println(io, "  ", c)
         end
+    end
+    if J.cause !== nothing
+        println(io, "  cause: ", J.cause.verdict, " (wall=$(J.cause.wall_class))")
     end
 end
 
@@ -201,7 +209,10 @@ function stratify(
 )
     suite = invariants isa Symbol ? Symbol[invariants] : collect(Symbol, invariants)
     T = analyze_conditional(L; invariants = suite, kwargs...)
-    return stratify(T; invariants = suite)
+    S = stratify(T; invariants = suite)
+    # Prefer the user-facing family (often a polynomial ring) over the internal
+    # Frac view stored on the CondTree, so jump explanations can differentiate SC.
+    return Stratification(L, S.tree, S.generic, S.strata, S.jumps, S.invariants)
 end
 
 function stratify(T::CondTree{P,C}; invariants = default_conditional_suite()) where {P,C}

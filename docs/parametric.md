@@ -232,6 +232,28 @@ Then pick e.g. \((a,b)=(1,1)\), `specialize`, and run `analyze` /
 `levi_decomposition` on the fiber (this family is solvable everywhere → Levi
 trivial). Fiber signatures match the strata under `validate_stratum`.
 
+### Jump cause + isomorphism
+
+After `stratify`, annotate confirmed jumps with deformation / iso certificates:
+
+```julia
+S = stratify(L; invariants = [:center, :derived_dim])
+explain_jumps!(S; order = 2, points = Dict(1 => pg, 2 => ps))
+J = jump_table(S)[1]
+J.cause.verdict          # e.g. :integrable_deformation
+J.cause.wall_class       # :nontrivial / :coboundary / …
+J.cause.iso              # IsoCertificate between fiber representatives
+```
+
+| API | Role |
+|-----|------|
+| `explain_jump` / `explain_jumps!` | wall cocycle + `H²` + MC + fiber `isomorphism` |
+| `wall_cocycle(family, point, dir)` | `∂_t μ` as adjoint `C²` cochain |
+| `isomorphism(L, L′)` | find `P` or invariant obstruction (`IsoCertificate`) |
+
+Runnable narrative: `example/jump_cause_iso.jl`
+(Jump `center 0→1` → nontrivial integrable wall class → no fiber isomorphism).
+
 Runnable script: `example/stratify_ab_family.jl`.
 
 ---

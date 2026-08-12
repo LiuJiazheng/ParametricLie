@@ -183,13 +183,19 @@ Goal: turn cohomology into a practical computational tool. See
 
 ## v0.4 --- Deformation Theory
 
-Implement
+Endpoint: decide rigidity; turn \(H^2(\mathfrak{g},\mathfrak{g})\) cocycles into genuine
+deformations (Maurer–Cartan / obstruction certificates); optionally emit a
+bracket family.
 
--   Infinitesimal deformations
--   NR bracket
--   Obstruction
--   Cohomology over parameter families
--   Isomorphism helpers
+In progress:
+
+-   [x] Infinitesimal deformations = adjoint \(H^2\) (via `ce_complex`)
+-   [x] Nijenhuis–Richardson bracket (`src/deformations/nr_bracket.jl`)
+-   [x] Truncated Maurer–Cartan / obstruction (`formal_deformation`; cached \(\phi_k,\psi_k\))
+-   [x] Equivalence via \(H^1\) (gauge): same-order `equivalent` / `equivalent_with_gauge`; `gauge_normal_form` (section in \(C^2=B^2\oplus W\))
+-   [x] Jump explanation (`explain_jumps!` / `JumpCause`: wall cocycle + MC + fiber iso)
+-   [x] Isomorphism helpers (`isomorphism` / `IsoCertificate`; not full classification)
+-   [ ] (later) cohomology over parameter families
 
 ------------------------------------------------------------------------
 

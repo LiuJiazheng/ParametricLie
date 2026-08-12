@@ -17,9 +17,10 @@ Exact symbolic toolkit for **finite-dimensional Lie algebras** defined by struct
 
 ## Status
 
-- **`lie`** — structure-constant `LieAlgebra` over AA/Nemo fields, Jacobi certificates, classical invariants, `analyze`.
-- **`parametric`** — polynomial/rational families, assumption-aware linear algebra, conditional analysis trees, `stratify` + fiber validation.
+- **`lie`** — structure-constant `LieAlgebra`, invariants, `analyze`, isomorphism helpers.
+- **`parametric`** — families, conditional LA, `stratify`, jump causes (`explain_jumps!`).
 - **`cohomology`** — exterior algebra \(\Lambda^\bullet V\), coefficient modules, lazy CE \(H^\bullet\).
+- **`deformations`** — NR bracket + truncated Maurer–Cartan + gauge `equivalent` / `gauge_normal_form`.
 
 ### Scalar fields
 
