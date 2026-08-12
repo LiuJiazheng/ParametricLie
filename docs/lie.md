@@ -27,7 +27,8 @@ F + structure constants
         ├─ center, series, Killing, radical
         ├─ quotient, Levi, ideal decomposition
         ├─ derivations
-        └─ analyze(L) → LieAlgebraReport
+        ├─ analyze(L) → LieAlgebraReport
+        └─ isomorphism / IsoCertificate
 ```
 
 ---
@@ -49,6 +50,7 @@ F + structure constants
 | `ideal_decomp.jl` | adjoint-commutant ideal decomposition / simplicity |
 | `derivations.jl` | `Der(L)` via Leibniz linear system |
 | `analyze.jl` | `LieAlgebraReport` summary + cached detail accessors |
+| `isomorphism.jl` | `isomorphism` / `IsoCertificate` (helpers, not full classification) |
 
 Exact linear algebra uses AbstractAlgebra/Nemo matrices (never `Float64`).
 
@@ -158,4 +160,4 @@ Der:              dim 6
   accepted on `LieAlgebra` for Jacobi identity checks, but field algorithms
   require a field (use `generic_algebra` / `specialize` from the parametric layer).
 
-See also: [POSITIONING.md](POSITIONING.md).
+See also: [parametric.md](parametric.md), [docs/README.md](README.md).

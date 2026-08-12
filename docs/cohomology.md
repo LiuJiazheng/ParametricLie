@@ -183,76 +183,14 @@ Known smoke values used in tests:
 
 ## Source layout
 
-```
+```text
 src/cohomology/
   exterior.jl            # Λ^• V
   module.jl              # LieModule, trivial / adjoint
   ce.jl                  # d, lazy Z / B / H
   central_extension.jl   # H²(—, F) → central extension
-src/deformations/
-  nr_bracket.jl          # Nijenhuis–Richardson on C^•(g,g)
-  maurer_cartan.jl       # truncated MC + FormalDeformation cache
 ```
+
 Field coefficients only (`FieldElem`) for the CE layer.
 
----
-
-## Nijenhuis–Richardson bracket (deformations)
-
-On adjoint cochains \(C^p(\mathfrak{g},\mathfrak{g})\) (same coordinates as above with \(m=n\)):
-
-```julia
-μ  = adjoint_bracket_cochain(L)     # bracket as μ ∈ C²
-φ  = basis_matrix(cohomology(L, adjoint_module(L), 2))[:, 1]
-br = nr_bracket(L, φ, 2, φ, 2)      # [φ,φ]_NR ∈ C³
-```
-
-| API | Role |
-|-----|------|
-| `adjoint_bracket_cochain(L)` | \(\mu\in C^2\) from structure constants |
-| `nr_circle(L, φ, p, ψ, q)` | \(\varphi\circ\psi\in C^{p+q-1}\) |
-| `nr_bracket(L, φ, p, ψ, q)` | \([\varphi,\psi]_{\mathrm{NR}}=\varphi\circ\psi-(-1)^{(p-1)(q-1)}\psi\circ\varphi\) |
-
-Identities used in tests: \([\mu,\mu]=0\); graded skew-symmetry; and with our CE sign convention
-
-\[
-d\varphi = (-1)^{p+1}\,[\mu,\varphi]_{\mathrm{NR}}.
-\]
-
-### Truncated Maurer–Cartan
-
-Formal deformations are integrated **order by order** up to a truncation
-`order` (default `2`). With our sign convention the MC equation is
-\(d\phi = \tfrac12[\phi,\phi]_{\mathrm{NR}}\).
-
-```julia
-φ1 = basis_matrix(cohomology(L, adjoint_module(L), 2))[:, 1]
-D  = formal_deformation(L, φ1; order=2)   # fills φ₁,ψ₂,(φ₂ or obstruction)
-extend!(D, 4)                             # reuse cache; continue
-deformation_term(D, 2)                    # φ₂ ∈ C² from cache
-mc_rhs(D, 2)                              # ψ₂ ∈ C³ from cache
-cert = mc_certificate(D)                  # thin view of the same caches
-```
-
-| API | Role |
-|-----|------|
-| `formal_deformation(L, φ1; order=N)` | truncated MC along a 2-cocycle |
-| `formal_deformation(L; order=N)` | one problem per `H²(L,L)` basis column |
-| `extend!(D, N)` | raise truncation; do not recompute old orders |
-| `deformation_term(D, k)` | cached `φ_k ∈ C²` |
-| `mc_rhs(D, k)` | cached `ψ_k ∈ C³` (`k≥2`) |
-| `obstruction_cochain(D)` | failing `ψ_k`, or `nothing` |
-| `mc_certificate(D)` | integrability certificate (reads same cache) |
-| `is_rigid(L)` | `dim H²(L,L) == 0` |
-| `equivalent(D1, D2; order=N)` | same-order gauge comparison (uses `φ` cache) |
-| `equivalent_with_gauge(D1, D2; order=N)` | same, plus witness `α_k ∈ C¹` |
-| `gauge_normal_form(D; order=N)` | gauge section: each `φ_k` in fixed complement of `B²` |
-| `gauge_normal_form!` / `_with_gauge` | in-place / with realizing `α_k` |
-
-Requires \(\mathrm{char}\neq 2\). Always terminates: at most `order` linear solves.
-
-Order-1 equivalence is \(\phi'_1-\phi_1\in B^2=\mathrm{im}\,d^1\). Higher orders
-solve recursively for \(\alpha_k\) with
-\(d\alpha_k=\phi'_k-\phi_k-\sum_{i=1}^{k-1}[\phi_i,\alpha_{k-i}]_{\mathrm{NR}}\).
-Normal form kills the \(B^2\) part at each order so \(\phi_k\in W\) for a fixed
-splitting \(C^2=B^2\oplus W\) (greedy on the standard basis).
+**Next:** formal deformations of the bracket — see [deformations.md](deformations.md).

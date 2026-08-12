@@ -2,15 +2,18 @@
     ParametricLie
 
 Exact symbolic toolkit for finite-dimensional Lie algebras given by structure
-constants (parametric families, stratification, cohomology — see
-`docs/POSITIONING.md`). Complements LieGroups.jl; does not replace it.
+constants: invariants, parameterized families / stratification, Chevalley–Eilenberg
+cohomology, central extensions, and formal deformations. Complements LieGroups.jl;
+does not replace group numerics.
 
 Layout:
 
-- `src/lie/` — single-algebra core (structure, invariants, `analyze`)
-- `src/parametric/` — parameterized families, conditional LA, stratification
-- `src/cohomology/` — exterior algebra and Chevalley–Eilenberg cohomology
-- `src/deformations/` — NR bracket and truncated Maurer–Cartan
+- `src/lie/` — single-algebra core (structure, invariants, `analyze`, isomorphism)
+- `src/parametric/` — families, conditional LA, stratification, jump causes
+- `src/cohomology/` — exterior algebra, modules, CE complex, central extensions
+- `src/deformations/` — NR bracket, truncated Maurer–Cartan, gauge equivalence
+
+Docs: `README.md`, `docs/README.md`.
 """
 module ParametricLie
 

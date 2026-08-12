@@ -46,6 +46,7 @@ an explicit \(p=0\) / \(p\neq 0\) split with a pivot certificate.
 | `cond_tree.jl` | `CondTree`, `refine`, `analyze_conditional`, invariant clients |
 | `stratify.jl` | `stratify`, `Stratum`, `JumpReport` |
 | `strata_compare.jl` | `compare`, `validate_stratum` |
+| `jump_explain.jl` | `explain_jumps!`, `JumpCause`, `wall_cocycle` |
 
 ---
 
@@ -267,4 +268,4 @@ Runnable script: `example/stratify_ab_family.jl`.
 - Prefer one-parameter / hypersurface demos; multivariate geometry is opt-in
   complexity.
 
-See also: [POSITIONING.md](POSITIONING.md), [`lie`](lie.md).
+See also: [lie.md](lie.md), [deformations.md](deformations.md), [docs/README.md](README.md).
