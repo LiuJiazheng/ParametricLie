@@ -6,7 +6,7 @@ for \(H^k\) on demand. Certificates are bases of cocycle representatives — not
 dimensions alone.
 
 ```julia
-using ParametricLie
+using ParametricLieAlgebras
 import Nemo
 
 L = LieAlgebra(Nemo.QQ, 3, Dict((1, 2) => [0, 0, 1]))  # Heisenberg

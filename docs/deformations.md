@@ -6,7 +6,7 @@ equivalence. Builds on [cohomology.md](cohomology.md) (same \(C^\bullet(\mathfra
 coordinates).
 
 ```julia
-using ParametricLie
+using ParametricLieAlgebras
 import Nemo
 
 L  = LieAlgebra(Nemo.QQ, 3, Dict((1, 2) => [0, 0, 1]))

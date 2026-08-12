@@ -104,7 +104,7 @@
         @test check_jacobi(L).ok
         ω_bad = [F(0), F(1), F(0)]  # coords on (e1∧e2, e1∧e3, e2∧e3)
         Z2 = cocycles(ce_complex(L), 2)
-        @test !ParametricLie._in_column_span(Z2, ω_bad)
+        @test !ParametricLieAlgebras._in_column_span(Z2, ω_bad)
         @test_throws ArgumentError central_extension(L, ω_bad)
     end
 end

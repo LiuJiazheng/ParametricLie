@@ -59,7 +59,7 @@ Exact linear algebra uses AbstractAlgebra/Nemo matrices (never `Float64`).
 ## Construction
 
 ```julia
-using ParametricLie
+using ParametricLieAlgebras
 import Nemo
 
 F = Nemo.QQ

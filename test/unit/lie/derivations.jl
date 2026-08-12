@@ -22,7 +22,7 @@
     E21 = AbstractAlgebra.matrix(F, 2, 2, [0, 0, 1, 0])
     E22 = AbstractAlgebra.matrix(F, 2, 2, [0, 0, 0, 1])
     for E in (E11, E12, E21, E22)
-        @test ParametricLie._matrix_in_span(E, mats2)
+        @test ParametricLieAlgebras._matrix_in_span(E, mats2)
         @test is_derivation(A2, E)
     end
 
@@ -38,7 +38,7 @@
     for i in 1:3
         Ai = ad(H, basis_elem(H, i))
         @test is_derivation(H, Ai)
-        @test ParametricLie._matrix_in_span(Ai, basis_matrices(DH))
+        @test ParametricLieAlgebras._matrix_in_span(Ai, basis_matrices(DH))
     end
     # apply_derivation sanity: D(e1) coords = column 1 of D
     D0 = first(basis_matrices(DH))
@@ -60,10 +60,10 @@
     # Every ad(e_i) lies in Der, and Inn spans Der
     ads = [ad(sl2, basis_elem(sl2, i)) for i in 1:3]
     for Ai in ads
-        @test ParametricLie._matrix_in_span(Ai, basis_matrices(Dsl))
+        @test ParametricLieAlgebras._matrix_in_span(Ai, basis_matrices(Dsl))
     end
     for D in basis_matrices(Dsl)
-        @test ParametricLie._matrix_in_span(D, ads)
+        @test ParametricLieAlgebras._matrix_in_span(D, ads)
     end
 
     # Non-derivation witness: identity is not a derivation of sl₂

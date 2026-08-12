@@ -2,7 +2,7 @@
     F = Nemo.QQ
     H = LieAlgebra(F, 3, Dict((1, 2) => [0, 0, 1]))
     C = ce_complex(H, adjoint_module(H))
-    _, W2 = ParametricLie._c2_splitting(C)
+    _, W2 = ParametricLieAlgebras._c2_splitting(C)
 
     @testset "order-1: same class via dα" begin
         H2 = cohomology(H, adjoint_module(H), 2)
@@ -59,7 +59,7 @@
         Dn = gauge_normal_form(D; order = 1)
         Dpn = gauge_normal_form(Dp; order = 1)
         @test deformation_term(Dn, 1) == deformation_term(Dpn, 1)
-        @test ParametricLie._in_column_span(W2, deformation_term(Dn, 1))
+        @test ParametricLieAlgebras._in_column_span(W2, deformation_term(Dn, 1))
         @test equivalent(D, Dn; order = 1)
         @test equivalent(Dp, Dn; order = 1)
 
@@ -90,8 +90,8 @@
         if is_integrable(D)
             Dn = gauge_normal_form(D; order = 2)
             @test equivalent(D, Dn; order = 2)
-            @test ParametricLie._in_column_span(W2, deformation_term(Dn, 1))
-            @test ParametricLie._in_column_span(W2, deformation_term(Dn, 2))
+            @test ParametricLieAlgebras._in_column_span(W2, deformation_term(Dn, 1))
+            @test ParametricLieAlgebras._in_column_span(W2, deformation_term(Dn, 2))
             # re-normalize is fixed point
             Dn2 = gauge_normal_form(Dn; order = 2)
             @test deformation_term(Dn2, 1) == deformation_term(Dn, 1)

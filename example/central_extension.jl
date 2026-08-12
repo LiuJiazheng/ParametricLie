@@ -8,14 +8,14 @@
 # Run from the package root:
 #   julia --project=. example/central_extension.jl
 
-using ParametricLie
+using ParametricLieAlgebras
 import AbstractAlgebra
 import Nemo
 
 const F = Nemo.QQ
 
 println("="^60)
-println("ParametricLie example — central extension from H²")
+println("ParametricLieAlgebras example — central extension from H²")
 println("="^60)
 
 # --- base algebra: abelian ℚ² ----------------------------------------------

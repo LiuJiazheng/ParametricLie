@@ -9,14 +9,14 @@
 # Run from the package root:
 #   julia --project=. example/stratify_ab_family.jl
 
-using ParametricLie
+using ParametricLieAlgebras
 import AbstractAlgebra
 import Nemo
 
 const QQ = Nemo.QQ
 
 println("="^60)
-println("ParametricLie — stratify → specialize → analyze")
+println("ParametricLieAlgebras — stratify → specialize → analyze")
 println("="^60)
 
 R, (a, b) = AbstractAlgebra.polynomial_ring(QQ, [:a, :b])

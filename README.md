@@ -1,4 +1,4 @@
-# ParametricLie.jl
+# ParametricLieAlgebras.jl
 
 Exact symbolic toolkit for **finite-dimensional Lie algebras** given by structure
 constants: classical invariants, parameterized families with certified strata,
@@ -15,7 +15,7 @@ Many Lie-algebra questions are algebraic and exact:
 - Is a jump a genuine change of isomorphism class, or only a change of coordinates?
 - Which H² classes extend, and which formal deformations are obstructed?
 
-ParametricLie answers these with **certificates** (bases, cocycles, pivot trails,
+ParametricLieAlgebras answers these with **certificates** (bases, cocycles, pivot trails,
 Maurer–Cartan caches)—not dimensions alone—over AbstractAlgebra/Nemo fields
 (ℚ, 𝔽ₚ, polynomial and rational-function rings).
 
@@ -64,7 +64,7 @@ Coefficient rings are AA/Nemo parents, e.g. `Nemo.QQ`, `Nemo.GF(p)`, or
 ## Quick start
 
 ```julia
-using ParametricLie
+using ParametricLieAlgebras
 import AbstractAlgebra, Nemo
 
 F = Nemo.QQ
@@ -109,7 +109,7 @@ julia --project=. example/jump_cause_iso.jl
 
 ```text
 src/
-  ParametricLie.jl
+  ParametricLieAlgebras.jl
   lie/              # structure constants, invariants, analyze, isomorphism
   parametric/       # specialize, CondTree, stratify, jump_explain
   cohomology/       # exterior algebra, modules, CE complex, central extensions
@@ -149,11 +149,11 @@ Continuous integration runs on pushes and pull requests
 
 ## Citation
 
-If you use ParametricLie in academic work, please cite it. A machine-readable
+If you use ParametricLieAlgebras in academic work, please cite it. A machine-readable
 record is in [`CITATION.cff`](CITATION.cff). APA-style:
 
-> Liu, J. (2026). *ParametricLie.jl* (Version 0.1.0) [Computer software].
-> https://github.com/LiuJiazheng/ParametricLie
+> Liu, J. (2026). *ParametricLieAlgebras.jl* (Version 0.1.0) [Computer software].
+> https://github.com/LiuJiazheng/ParametricLieAlgebras.jl
 
 ---
 
@@ -173,7 +173,7 @@ representation theory; exhaustive iso classification.
 
 ## Related packages
 
-| Package | Role vs ParametricLie |
+| Package | Role vs ParametricLieAlgebras |
 |---------|------------------------|
 | [AbstractAlgebra.jl](https://nemocas.github.io/AbstractAlgebra.jl/) / [Nemo.jl](https://nemocas.github.io/Nemo.jl/) | Exact fields, polynomials, linear algebra (our scalar backend) |
 | [LieGroups.jl](https://github.com/JuliaManifolds/LieGroups.jl) | Concrete groups and numerics; different starting point (optional later bridge) |

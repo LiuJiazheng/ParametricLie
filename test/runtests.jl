@@ -1,10 +1,10 @@
 using Test
-using ParametricLie
+using ParametricLieAlgebras
 # Prefer `import` so Nemo's exports (dim, coefficient_ring, …) do not clash.
 import AbstractAlgebra
 import Nemo
 
-@testset "ParametricLie.jl" begin
+@testset "ParametricLieAlgebras.jl" begin
     # --- lie (single-algebra core) -------------------------------------------
     include("unit/lie/types.jl")
     include("unit/lie/bracket.jl")

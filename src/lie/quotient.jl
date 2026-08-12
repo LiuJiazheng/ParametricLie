@@ -91,7 +91,7 @@ function quotient_algebra(
     # Default via cartan_orthogonal to avoid kwarg name shadowing `radical(L)`.
     R = radical === nothing ? cartan_orthogonal(L) : radical
     parent(R) === L || throw(ArgumentError("radical must belong to L"))
-    X = complement === nothing ? ParametricLie.complement(L, R) : complement
+    X = complement === nothing ? ParametricLieAlgebras.complement(L, R) : complement
     parent(X) === L || throw(ArgumentError("complement must belong to L"))
     dim(X) + dim(R) == dim(L) ||
         throw(ArgumentError("complement ⊕ radical must equal L as vector spaces"))

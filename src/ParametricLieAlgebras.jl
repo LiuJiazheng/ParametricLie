@@ -1,5 +1,5 @@
 """
-    ParametricLie
+    ParametricLieAlgebras
 
 Exact symbolic toolkit for finite-dimensional Lie algebras given by structure
 constants: invariants, parameterized families / stratification, Chevalley–Eilenberg
@@ -15,7 +15,7 @@ Layout:
 
 Docs: `README.md`, `docs/README.md`.
 """
-module ParametricLie
+module ParametricLieAlgebras
 
 using LinearAlgebra
 using SparseArrays
@@ -113,4 +113,4 @@ export is_integrable, stalled_at, max_order, filled_order, seed, is_rigid
 export equivalent, equivalent_with_gauge
 export gauge_normal_form, gauge_normal_form!, gauge_normal_form_with_gauge
 
-end # module ParametricLie
+end # module ParametricLieAlgebras

@@ -8,14 +8,14 @@
 # Run from the package root:
 #   julia --project=. example/jump_cause_iso.jl
 
-using ParametricLie
+using ParametricLieAlgebras
 import AbstractAlgebra
 import Nemo
 
 const QQ = Nemo.QQ
 
 println("="^64)
-println("ParametricLie — Jump → cause (H²/MC) → isomorphism")
+println("ParametricLieAlgebras — Jump → cause (H²/MC) → isomorphism")
 println("="^64)
 
 R, (a, b) = AbstractAlgebra.polynomial_ring(QQ, [:a, :b])

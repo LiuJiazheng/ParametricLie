@@ -15,13 +15,13 @@
 # Run from the package root:
 #   julia --project=. example/heisenberg_adjoint_cohomology.jl
 
-using ParametricLie
+using ParametricLieAlgebras
 import Nemo
 
 const F = Nemo.QQ
 
 println("="^60)
-println("ParametricLie example — Heisenberg adjoint cohomology")
+println("ParametricLieAlgebras example — Heisenberg adjoint cohomology")
 println("="^60)
 
 # --- algebra & module -------------------------------------------------------

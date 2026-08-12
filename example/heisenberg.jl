@@ -1,19 +1,19 @@
 # example/heisenberg.jl
 #
-# First ParametricLie use case: the 3-dimensional Heisenberg algebra over ℚ.
+# First ParametricLieAlgebras use case: the 3-dimensional Heisenberg algebra over ℚ.
 #
 #   [e₁, e₂] = e₃,   all other brackets zero.
 #
 # Run from the package root:
 #   julia --project=. example/heisenberg.jl
 
-using ParametricLie
+using ParametricLieAlgebras
 import Nemo
 
 const F = Nemo.QQ
 
 println("="^60)
-println("ParametricLie example — Heisenberg algebra")
+println("ParametricLieAlgebras example — Heisenberg algebra")
 println("="^60)
 
 # --- construct --------------------------------------------------------------

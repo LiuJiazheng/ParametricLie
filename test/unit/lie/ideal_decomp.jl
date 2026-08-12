@@ -59,7 +59,7 @@
     end
     # Each factor is simple
     for I in ideals2
-        Lind, _ = ParametricLie._induced_lie_algebra(sl2sl2, I)
+        Lind, _ = ParametricLieAlgebras._induced_lie_algebra(sl2sl2, I)
         @test is_simple(Lind)
         @test is_semisimple(Lind)
     end

@@ -1,16 +1,16 @@
-# This CITATION.cff file was generated for ParametricLie.jl
+# This CITATION.cff file was generated for ParametricLieAlgebras.jl
 # https://citation-file-format.github.io/
 
 cff-version: 1.2.0
-title: "ParametricLie.jl"
+title: "ParametricLieAlgebras.jl"
 message: "If you use this software, please cite it as below."
 type: software
 authors:
   - family-names: Liu
     given-names: Jiazheng
     email: liujiazzheng@gmail.com
-repository-code: "https://github.com/LiuJiazheng/ParametricLie"
-url: "https://github.com/LiuJiazheng/ParametricLie"
+repository-code: "https://github.com/LiuJiazheng/ParametricLieAlgebras.jl"
+url: "https://github.com/LiuJiazheng/ParametricLieAlgebras.jl"
 abstract: >-
   Exact symbolic toolkit for finite-dimensional Lie algebras given by
   structure constants: classical invariants, parameterized families with

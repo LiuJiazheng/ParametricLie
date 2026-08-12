@@ -28,7 +28,7 @@
         found = false
         for j in 1:9
             v = fill(F(0), 9); v[j] = F(1)
-            if !ParametricLie._in_column_span(Z2, v)
+            if !ParametricLieAlgebras._in_column_span(Z2, v)
                 @test_throws ArgumentError formal_deformation(H, v; order = 2)
                 found = true
                 break

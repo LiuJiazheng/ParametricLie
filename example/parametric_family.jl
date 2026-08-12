@@ -9,14 +9,14 @@
 # Run from the package root:
 #   julia --project=. example/parametric_family.jl
 
-using ParametricLie
+using ParametricLieAlgebras
 import AbstractAlgebra
 import Nemo
 
 const QQ = Nemo.QQ
 
 println("="^60)
-println("ParametricLie example — v0.2.1 / v0.2.2 parameter families")
+println("ParametricLieAlgebras example — v0.2.1 / v0.2.2 parameter families")
 println("="^60)
 
 R, (a,) = AbstractAlgebra.polynomial_ring(QQ, [:a])

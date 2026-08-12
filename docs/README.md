@@ -1,6 +1,6 @@
 # Documentation
 
-Module references for ParametricLie. Start from the root [README](../README.md)
+Module references for ParametricLieAlgebras. Start from the root [README](../README.md)
 for motivation, install, and quick start.
 
 | Guide | Source tree | Topics |

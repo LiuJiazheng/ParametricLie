@@ -30,7 +30,7 @@
             @test length(Is) == binomial(n, k)
             Λn = exterior_algebra(QQ, n)
             for (r, I) in enumerate(Is)
-                @test coord_index(n, I) == ParametricLie._degree_offset(n, k) + r
+                @test coord_index(n, I) == ParametricLieAlgebras._degree_offset(n, k) + r
                 α = exterior_monomial(Λn, I)
                 @test coords(α)[coord_index(n, I)] == QQ(1)
                 @test count(!iszero, coords(α)) == 1
