@@ -1,0 +1,28 @@
+# This CITATION.cff file was generated for ParametricLie.jl
+# https://citation-file-format.github.io/
+
+cff-version: 1.2.0
+title: "ParametricLie.jl"
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: Liu
+    given-names: Jiazheng
+    email: liujiazzheng@gmail.com
+repository-code: "https://github.com/LiuJiazheng/ParametricLie"
+url: "https://github.com/LiuJiazheng/ParametricLie"
+abstract: >-
+  Exact symbolic toolkit for finite-dimensional Lie algebras given by
+  structure constants: classical invariants, parameterized families with
+  certified strata, Chevalley–Eilenberg cohomology, central extensions,
+  and truncated formal deformations.
+keywords:
+  - Julia
+  - Lie algebra
+  - structure constants
+  - cohomology
+  - deformation theory
+  - computer algebra
+license: MIT
+version: 0.1.0
+date-released: "2026-08-12"

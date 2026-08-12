@@ -136,6 +136,19 @@ See [example/README.md](example/README.md) for what each script demonstrates.
 julia --project=. -e 'using Pkg; Pkg.test()'
 ```
 
+Continuous integration runs on pushes and pull requests
+([`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
+
+---
+
+## Citation
+
+If you use ParametricLie in academic work, please cite it. A machine-readable
+record is in [`CITATION.cff`](CITATION.cff). APA-style:
+
+> Liu, J. (2026). *ParametricLie.jl* (Version 0.1.0) [Computer software].
+> https://github.com/LiuJiazheng/ParametricLie
+
 ---
 
 ## Future work

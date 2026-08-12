@@ -3,18 +3,32 @@ name: CI
 on:
   push:
     branches: [main, master]
+    tags: ["v*"]
   pull_request:
     branches: [main, master]
 
+# Allow julia-actions/cache to prune old caches
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   test:
-    name: Julia ${{ matrix.version }} - ${{ matrix.os }}
+    name: Julia ${{ matrix.version }} · ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        version: ["1.10"]
-        os: [ubuntu-latest, macOS-latest]
+        version: ["1.10", "1"]
+        os: [ubuntu-latest]
+        include:
+          - version: "1"
+            os: macOS-latest
     steps:
       - uses: actions/checkout@v4
       - uses: julia-actions/setup-julia@v2
